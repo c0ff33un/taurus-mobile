@@ -8,33 +8,39 @@ import { Button, TextInput, DefaultTheme } from 'react-native-paper';
 
 class LobbyScreen extends Component {
   state = {
-    room_id: ""
+    room_id: "",
+    jwt: ""
   };
+
+  
 
   handleCreateRoom = () => {
     const options = {
-      method: "POST",
+      method : 'POST',
       headers: {
         "Content-Type": "application/json",
+        'Authorization': "Bearer " + this.props.jwt,
         "Accept": "application/json"
       },
-      body: `"query": "mutation{room{id}}"`
+      body: JSON.stringify({
+        query: `mutation{room{id}}`
+      })
     }
-    const { apiUrl } = getEnvVars
-    console.log(`apiUrl: ${apiUrl}`)
-    fetch(`http://${apiUrl}`, options)
+    const {apiUrl} = getEnvVars
+    return fetch(apiUrl, options)
       .then(res => res.json())
       .then(res => {
+        console.log(res)
         if(!res.data){
-          dispatch(receiveJWTError("waat"))
+          console.log("Error")
         } else {
           room_id = res.data.room.id
-          console.log(room_id)
           this.setState({room_id: room_id})
         }
         return res
       })
       .catch(error => {throw new Error(error)})
+    
   }
 
   render() {
@@ -108,6 +114,12 @@ class LobbyScreen extends Component {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    jwt: state.session.jwt
+  };
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 0,
@@ -124,4 +136,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect()(LobbyScreen);
+export default connect(mapStateToProps)(LobbyScreen);
