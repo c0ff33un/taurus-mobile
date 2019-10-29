@@ -6,6 +6,8 @@ import getEnvVars from '../../../environment'
 
 import { Button, TextInput, DefaultTheme } from 'react-native-paper';
 
+
+
 class LobbyScreen extends Component {
   state = {
     room_id: ""
@@ -16,7 +18,8 @@ class LobbyScreen extends Component {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        "Accept": "application/json",
+        "Authorization": `Bearer ${this.props.jwt}`
       },
       body: `"query": "mutation{room{id}}"`
     }
@@ -24,9 +27,11 @@ class LobbyScreen extends Component {
     console.log(`apiUrl: ${apiUrl}`)
     fetch(`http://${apiUrl}`, options)
       .then(res => res.json())
+      .catch(err => console.log(err))
       .then(res => {
+        console.log(JSON.stringify(res,null,2))
         if(!res.data){
-          dispatch(receiveJWTError("waat"))
+          // dispatch(receiveJWTError("waat"))
         } else {
           room_id = res.data.room.id
           console.log(room_id)
@@ -63,7 +68,7 @@ class LobbyScreen extends Component {
           <Button
             mode="contained"
             dark={true}
-            title="Iniciar Sesión"
+            title="Create Room"
             onPress={this.handleCreateRoom}
             style={{flex: 1}}
             theme={{
@@ -84,7 +89,7 @@ class LobbyScreen extends Component {
           <Button
             mode="contained"
             dark={true}
-            title="Iniciar Sesión"
+            title="Join Room"
             onPress={console.log("Pressed")}
             style={{paddingLeft: 10, flex: 1}}
             theme={{

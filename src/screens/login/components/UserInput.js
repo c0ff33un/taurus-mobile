@@ -26,8 +26,8 @@ const validation = state => {
 
 class UserInput extends Component {
   state = {
-    email: "",
-    pass: "",
+    email: "a@a.com",
+    pass: "123456",
     error: false,
     firstError: false,
     loading: false
@@ -51,6 +51,7 @@ class UserInput extends Component {
 
     if (this.props.loginError && this.state.firstError) {
       alert("Login error")
+      this.setState({firstError: false})
     }
 
     return (

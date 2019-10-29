@@ -69,6 +69,14 @@ class App extends Component {
           break;
       }
     }
+
+    ws.onclose = e => {
+      console.log("@@@\nCLOSE\n@@@");
+    }
+
+    ws.onerror = e => {
+      console.log("@@@\nERROR\n@@@")
+    }
   }
 
   render() {

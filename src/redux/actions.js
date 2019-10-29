@@ -146,7 +146,7 @@ export function fetchMeme() {
   return (dispatch, getState) => {
     const { apiUrl } = getEnvVars
 
-    const url = `${apiUrl}/memes/${getState().memePostId}`
+    const url = `http://${apiUrl}/memes/${getState().memePostId}`
     const options = {
       method: "GET",
       headers: {
@@ -194,7 +194,7 @@ export function loginWithJWT(jwt){
 }
 
 export function login(email, password) {
-  return (dispatch) => {
+  return dispatch => {
     dispatch(requestJWT())
     const { apiUrl } = getEnvVars
     
@@ -208,25 +208,26 @@ export function login(email, password) {
         query: `mutation {login(user:{email:"${email}" password: "${password}"}){user{id handle email guest} jwt}}`
       })
     }
-    return fetch(apiUrl, options)
+    return fetch(`http://${apiUrl}`, options)
       .then(res => res.json())
       .then(res => {
-        if(!res.data){
-          dispatch(receiveJWTError("waat"))
+        console.log(res)
+        if(res.data==null){
+          dispatch(receiveJWTError(res))
         } else {
+          console.log(res)
           jwt = res.data.login.jwt
           dispatch(receiveJWT(jwt))
           console.log(`jwt: ${jwt}`)
-          
         }
         return res
       })
-      .catch(error => {throw new Error(error)})
+      .catch(err => console.log(err))
       .then(res => {
-        const user = {
-            data: res.data.login.user,
-            token: jwt
-        }
+        // const user = {
+        //     data: res.data.login.user,
+        //     token: jwt
+        // }
       })
   }
 }
