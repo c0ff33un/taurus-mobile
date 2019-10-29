@@ -205,27 +205,28 @@ export function login(email, password) {
         "Accept": "application/json"
       },
       body: JSON.stringify({
-        query: "mutation {login(user:{email:\"" + {email} + "\" password:\"" + {password} + "\"}){user{id handle email guest} jwt}}"
+        query: `mutation {login(user:{email:"${email}" password: "${password}"}){user{id handle email guest} jwt}}`
       })
     }
     return fetch(apiUrl, options)
-      .then(response => {
-        const { status } = response
-        console.log(response)
-        if(status == 401) {
+      .then(res => res.json())
+      .then(res => {
+        if(!res.data){
           dispatch(receiveJWTError("waat"))
-        } else if (status == 200) {
-          const jwt = response.headers.map.authorization
-          dispatch(receiveJWT(jwt))
         } else {
-          dispatch(receiveJWTError("niggaa"))
+          jwt = res.data.login.jwt
+          dispatch(receiveJWT(jwt))
+          console.log(`jwt: ${jwt}`)
+          
         }
-        return response
+        return res
       })
-      .catch(error => {
-        console.log(error)
-        dispatch(receiveJWTError())
-        return error
+      .catch(error => {throw new Error(error)})
+      .then(res => {
+        const user = {
+            data: res.data.login.user,
+            token: jwt
+        }
       })
   }
 }

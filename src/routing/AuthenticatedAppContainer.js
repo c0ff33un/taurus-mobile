@@ -8,7 +8,7 @@ const AppNavigator = createStackNavigator(
     Lobby: {screen: LobbyScreen, navigationOptions: { header: null }}
   },
   {
-    initialRouteName: 'ValidateEmail'
+    initialRouteName: 'Lobby'
   }
 );
 
