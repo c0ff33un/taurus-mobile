@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { connect } from "react-redux";
 
-//import AuthenticatedAppContainer from "./routing/AuthenticatedAppContainer";
+import AuthenticatedAppContainer from "./routing/AuthenticatedAppContainer";
 import UnauthenticatedAppContainer from "./routing/UnauthenticatedAppContainer";
 
 const styles = StyleSheet.create({
@@ -27,7 +27,7 @@ class TaurusApp extends Component {
       <View style={{ flex: 1 }}>
         <View style={styles.statusBar} />
         <Fragment>
-          {/* {authenticated ? (
+          {authenticated ? (
             <AuthenticatedAppContainer
               style={styles.container}
             />
@@ -35,10 +35,7 @@ class TaurusApp extends Component {
             <UnauthenticatedAppContainer
               style={styles.container}
             />
-          )} */}
-          <UnauthenticatedAppContainer
-              style={styles.container}
-          />
+          )}
         </Fragment>
       </View>
     );

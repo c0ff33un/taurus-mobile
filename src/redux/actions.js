@@ -201,21 +201,20 @@ export function login(email, password) {
     const options = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       },
       body: JSON.stringify({
-        user: {
-          email: email,
-          password: password
-        }
+        query: "mutation {login(user:{email:\"" + {email} + "\" password:\"" + {password} + "\"}){user{id handle email guest} jwt}}"
       })
     }
-    return fetch(apiUrl + '/login', options)
+    return fetch(apiUrl, options)
       .then(response => {
         const { status } = response
+        console.log(response)
         if(status == 401) {
           dispatch(receiveJWTError("waat"))
-        } else if (status == 201) {
+        } else if (status == 200) {
           const jwt = response.headers.map.authorization
           dispatch(receiveJWT(jwt))
         } else {
