@@ -2,12 +2,40 @@ import React, { Component } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
 
+import getEnvVars from '../../../environment'
+
 import { Button, TextInput, DefaultTheme } from 'react-native-paper';
 
 class LobbyScreen extends Component {
   state = {
-    lobby: ""
+    room_id: ""
   };
+
+  handleCreateRoom = () => {
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: `"query": "mutation{room{id}}"`
+    }
+    const { apiUrl } = getEnvVars
+    console.log(`apiUrl: ${apiUrl}`)
+    fetch(`http://${apiUrl}`, options)
+      .then(res => res.json())
+      .then(res => {
+        if(!res.data){
+          dispatch(receiveJWTError("waat"))
+        } else {
+          room_id = res.data.room.id
+          console.log(room_id)
+          this.setState({room_id: room_id})
+        }
+        return res
+      })
+      .catch(error => {throw new Error(error)})
+  }
 
   render() {
     return (
@@ -16,8 +44,8 @@ class LobbyScreen extends Component {
           mode="outlined"
           label="Room ID"
           style={styles.lobby}
-          value={this.state.lobby}
-          onChangeText={lobby => this.setState({ lobby })}
+          value={this.state.room_id}
+          onChangeText={room_id => this.setState({ room_id })}
           theme={{
             ...DefaultTheme,
             colors: {
@@ -36,7 +64,7 @@ class LobbyScreen extends Component {
             mode="contained"
             dark={true}
             title="Iniciar Sesión"
-            onPress={console.log("Pressed")}
+            onPress={this.handleCreateRoom}
             style={{flex: 1}}
             theme={{
               ...DefaultTheme,
