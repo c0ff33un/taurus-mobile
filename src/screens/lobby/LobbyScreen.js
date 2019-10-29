@@ -14,8 +14,6 @@ class LobbyScreen extends Component {
     jwt: ""
   };
 
-  
-
   handleCreateRoom = () => {
     console.log(this.props.jwt)
     const options = {
@@ -35,12 +33,11 @@ class LobbyScreen extends Component {
       .catch(err => console.log(err))
       .then(res => {
         console.log(res)
-        // if(!res.data){
-        //   console.log("Error")
-        // } else {
-        //   room_id = res.data.room.id
-        //   this.setState({room_id: room_id})
-        // }
+        if(!res.data){
+          console.log("Error")
+        } else {
+          this.setState({room_id: res.data.room.id})
+        }
         return res
       })
       .catch(error => {throw new Error(error)})
