@@ -32,7 +32,7 @@ class LobbyScreen extends Component {
       .then(res => {
         console.log(res)
         if(!res.data){
-          console.log("Error")
+          console.log("No data")
         } else {
           this.setState({room_id: res.data.room.id})
         }

@@ -5,12 +5,13 @@ import LobbyScreen from '../screens/lobby/LobbyScreen'
 
 const AppNavigator = createStackNavigator(
   {
-    Lobby: {screen: LobbyScreen, navigationOptions: { header: null }}
+    Lobby: {screen: LobbyScreen, navigationOptions: { header: null }, props: {name: "Hola"}}
   },
   {
     initialRouteName: 'Lobby'
   }
 );
+
 
 const AuthenticatedAppContainer = createAppContainer(AppNavigator);
 

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 });
 
 
-class TaurusApp extends Component {
+class TaurusApp extends Component  {
 
   render() {
     console.log("Appjs", this.props);
@@ -29,6 +29,7 @@ class TaurusApp extends Component {
         <Fragment>
           {authenticated ? (
             <AuthenticatedAppContainer
+              appProps={this.props.appProps}
               style={styles.container}
             />
           ) : (
