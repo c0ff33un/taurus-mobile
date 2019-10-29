@@ -34,8 +34,7 @@ class LobbyScreen extends Component {
         if(!res.data){
           console.log("Error")
         } else {
-          room_id = res.data.room.id
-          this.setState({room_id: room_id})
+          this.setState({room_id: res.data.room.id})
         }
         return res
       })
