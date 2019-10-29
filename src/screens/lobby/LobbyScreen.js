@@ -17,17 +17,13 @@ class LobbyScreen extends Component {
   
 
   handleCreateRoom = () => {
+    console.log(this.props.jwt)
     const options = {
       method : 'POST',
       headers: {
         "Content-Type": "application/json",
-<<<<<<< HEAD
         "Accept": "application/json",
         "Authorization": `Bearer ${this.props.jwt}`
-=======
-        'Authorization': "Bearer " + this.props.jwt,
-        "Accept": "application/json"
->>>>>>> f336d0a630991c8948079137e4b6826d872e3e9e
       },
       body: JSON.stringify({
         query: `mutation{room{id}}`
@@ -38,19 +34,13 @@ class LobbyScreen extends Component {
       .then(res => res.json())
       .catch(err => console.log(err))
       .then(res => {
-<<<<<<< HEAD
-        console.log(JSON.stringify(res,null,2))
-        if(!res.data){
-          // dispatch(receiveJWTError("waat"))
-=======
         console.log(res)
-        if(!res.data){
-          console.log("Error")
->>>>>>> f336d0a630991c8948079137e4b6826d872e3e9e
-        } else {
-          room_id = res.data.room.id
-          this.setState({room_id: room_id})
-        }
+        // if(!res.data){
+        //   console.log("Error")
+        // } else {
+        //   room_id = res.data.room.id
+        //   this.setState({room_id: room_id})
+        // }
         return res
       })
       .catch(error => {throw new Error(error)})
