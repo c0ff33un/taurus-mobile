@@ -66,6 +66,12 @@ class LobbyScreen extends Component {
     
   }
 
+  handleJoinRoom = () =>{
+    const {room_id} = this.state, {jwt} = this.props
+    this.props.screenProps.connect(room_id, jwt)
+    this.props.navigation.navigate({routeName: 'Game',})
+  }
+
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
@@ -114,7 +120,7 @@ class LobbyScreen extends Component {
             mode="contained"
             dark={true}
             title="Join Room"
-            onPress={console.log("Pressed")}
+            onPress={this.handleJoinRoom}
             style={{paddingLeft: 10, flex: 1}}
             theme={{
               ...DefaultTheme,

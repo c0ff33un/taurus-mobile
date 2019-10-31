@@ -763,6 +763,37 @@ class GameScreen extends React.Component {
   };
 
   keyPressed = key => {
+    const { roomId } = this.props.screenProps;
+    const options = {
+      method : 'PUT',
+    }
+    const {wsUrl} = getEnvVars
+    fetch(`http://${wsUrl}/room/start/${roomId}`, options)
+      .then(response => {
+        console.log("1111111111111111111111111",response.body)
+        return response
+      })
+      .catch((error) => {
+        console.log(error)
+        return error
+      })
+      .then(json => {
+        console.log("2222222222222222222222222",json)
+        return json
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+  moveMessage = (direction) => {
+    const { ws } = this.props.screenProps;
+    const obj = {"type": "move", "direction" : direction};
+    console.log(direction);
+    ws.send(JSON.stringify(obj));
+  }
+  
+  keyPressed = (key) => {
+    
     // while( (new Date().getTime() - lastPressed) < 200 )
     // {
 
@@ -792,7 +823,7 @@ class GameScreen extends React.Component {
   render() {
     const { players } = this.props;
     const { cols, rows } = this.state;
-    const { grid } = this.state;
+    const { grid } = this.props.screenProps;
     var draw = false;
     var gridItems = null;
     if (grid !== null) {
@@ -825,8 +856,8 @@ class GameScreen extends React.Component {
         return <View key={key} style={style}></View>;
       });
     }
-    // console.log("gridItems", gridItems);
-    console.log("GameProps:", this.props);
+    // console.log("gridItems", gridItems)
+    // console.log('GameProps:', this.props)
     return (
       <View
         style={{
