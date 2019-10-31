@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Dimensions } from "react-native";
 import { connect } from "react-redux";
 
 import getEnvVars from '../../../environment'
@@ -100,7 +100,7 @@ class LobbyScreen extends Component {
             dark={true}
             title="Create Room"
             onPress={this.handleCreateRoom}
-            style={{flex: 1}}
+            style={{flex: 1, margin:3}}
             theme={{
               ...DefaultTheme,
               colors: {
@@ -121,11 +121,11 @@ class LobbyScreen extends Component {
             dark={true}
             title="Join Room"
             onPress={this.handleJoinRoom}
-            style={{paddingLeft: 10, flex: 1}}
+            style={{margin:3, flex: 1}}
             theme={{
               ...DefaultTheme,
               colors: {
-                primary: '#6290C3',
+                primary: '#FE938C',
                 accent: '#F6BD60',
                 background: '#FDFFFC',
                 surface: '#FDFFFC',
@@ -137,8 +137,25 @@ class LobbyScreen extends Component {
             }}
           >Join Room</Button>
         </View>
-        <View>
-          <Button onPress={this.handleLogOut}>LOG OUT</Button>
+        <View style={{flex:1, flexDirection:'column-reverse'}}>
+          <Button 
+          mode="contained"
+          style={{flex:0.05, margin:3,}}
+          dark={true}
+          onPress={this.handleLogOut}
+          theme={{
+              ...DefaultTheme,
+              colors: {
+                primary: '#E85D75',
+                accent: '#F6BD60',
+                background: '#FDFFFC',
+                surface: '#FDFFFC',
+                text: '#FDFFFC',
+                disabled: '#FDFFFC',
+                placeholder: '#FDFFFC',
+                backdrop: '#FDFFFC',
+              }
+            }}>LOG OUT</Button>
         </View>
 
       </ScrollView>
@@ -154,15 +171,15 @@ function mapStateToProps(state) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0,
+    flex: 1,
     justifyContent: 'center',
   },
   lobby: {
     margin: 8,
-    borderColor: "gray"
+    width: Dimensions.get("window").width - 10
   },
   buttons: {
-    flex: 1, 
+    flex: 0.06, 
     flexDirection: 'row', 
     alignSelf: 'center'
   }

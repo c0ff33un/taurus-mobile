@@ -179,7 +179,7 @@ export default class UserInput extends Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={{ marginLeft: 8 }}>
-          <Text>Ingresa tu nombre de usuario</Text>
+          <Text>Username</Text>
         </View>
         <TextInput
           theme={themes}
@@ -198,13 +198,13 @@ export default class UserInput extends Component {
           <View style={{ marginLeft: 8 }}>
             <Text style={styles.error} theme={themes}>
               {" "}
-              El nombre de usuario debe tener entre 5 - 20 caracteres
+              Username should be 5 to 20 characters long!
             </Text>
           </View>
         ) : null}
 
         <View style={{ marginLeft: 8 }}>
-          <Text>Ingresa tu email</Text>
+          <Text>Email</Text>
         </View>
         <TextInput
           theme={themes}
@@ -224,13 +224,13 @@ export default class UserInput extends Component {
           <View style={{ marginLeft: 8 }}>
             <Text style={styles.error} theme={themes}>
               {" "}
-              Por favor escribe un email valido
+              Use a valid email, please.
             </Text>
           </View>
         ) : null}
 
         <View style={{ marginLeft: 8 }}>
-          <Text>Ingresa tu contraseña</Text>
+          <Text>Password</Text>
         </View>
         <TextInput
           theme={themes}
@@ -249,13 +249,13 @@ export default class UserInput extends Component {
           <View style={{ marginLeft: 8 }}>
             <Text style={styles.error} theme={themes}>
               {" "}
-              La contraseña debe tener entre 8 - 30 caracteres
+              Password must be 6 to 30 characters long!
             </Text>
           </View>
         ) : null}
 
         <View style={{ marginLeft: 8 }}>
-          <Text>Ingresa nuevamente tu contraseña</Text>
+          <Text>Password again</Text>
         </View>
         <TextInput
           theme={themes}
@@ -274,7 +274,7 @@ export default class UserInput extends Component {
           <View style={{ marginLeft: 8 }}>
             <Text style={styles.error} theme={themes}>
               {" "}
-              Las contraseñas no coinciden{" "}
+              Passwords are not the same{" "}
             </Text>
           </View>
         ) : null}
@@ -288,7 +288,7 @@ export default class UserInput extends Component {
           loading={this.state.loading}
           theme={themes}
         >
-          Registrarse
+          Sign Up
         </Button>
       </View>
     );
@@ -299,7 +299,7 @@ const themes = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: "#6290C3",
+    primary: "#32322C",
     accent: "#272727",
     background: "#FDFFFC",
     text: "#272727",

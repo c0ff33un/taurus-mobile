@@ -68,6 +68,7 @@ class App extends Component {
             this.setState({ grid });
             break;
           case "win":
+            console.log(message);
             break;
           default:
             console.log("Unhandled Message:")

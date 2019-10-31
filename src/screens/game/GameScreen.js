@@ -13,6 +13,7 @@ import getEnvVars from "../../../environment";
 
 import { Button, TextInput, DefaultTheme } from "react-native-paper";
 import { Dimensions } from "react-native";
+import { withNavigation } from 'react-navigation';
 
 const CELL_SIZE = 25;
 const WIDTH = 625;
@@ -834,9 +835,13 @@ class GameScreen extends React.Component {
     }
   };
 
+  componentDidMount() {
+    console.log(this.props.screenProps.ready)
+  }
+
   render() {
     const { cols, rows } = this.state;
-    const { grid, players} = this.props.screenProps;
+    const { grid, players } = this.props.screenProps;
     var draw = false;
     var gridItems = null;
     if (grid !== null) {
@@ -893,7 +898,7 @@ class GameScreen extends React.Component {
         >
           <TextInput
             mode="outlined"
-            style={{ flex: 0.1, justifyContent: "center" }}
+            style={{ flex: 0.2, justifyContent: "center" }}
             value={this.props.screenProps.roomId}
             onChangeText={room_id => this.setState({ room_id })}
             disabled={true}
@@ -901,7 +906,7 @@ class GameScreen extends React.Component {
               ...DefaultTheme,
               colors: {
                 ...DefaultTheme.colors,
-                primary: "#6290C3",
+                primary: "#13C4A3",
                 accent: "#272727",
                 background: "#FDFFFC",
                 text: "#272727",
@@ -915,18 +920,18 @@ class GameScreen extends React.Component {
               mode="outlined"
               dark={true}
               onPress={this.setupGame}
-              style={{ flex: 1, height: 60, padding: 10, margin: 4 }}
+              style={{ flex: 1, height: 55, padding: 10, margin: 4 }}
               theme={{
                 ...DefaultTheme,
                 colors: {
-                  primary: "#6290C3",
-                  accent: "#F6BD60",
-                  background: "#FDFFFC",
-                  surface: "#FDFFFC",
-                  text: "#FDFFFC",
-                  disabled: "#FDFFFC",
-                  placeholder: "#FDFFFC",
-                  backdrop: "#FDFFFC"
+                  primary: "#32322C",
+                  accent: "#36F1CD",
+                  background: "#36F1CD",
+                  surface: "#36F1CD",
+                  text: "#36F1CD",
+                  disabled: "#36F1CD",
+                  placeholder: "#36F1CD",
+                  backdrop: "#36F1CD"
                 }
               }}
             >
@@ -938,11 +943,11 @@ class GameScreen extends React.Component {
               dark={true}
               title="Join Room"
               onPress={this.startGame}
-              style={{ flex: 1, height: 60, padding: 10, margin: 4 }}
+              style={{ flex: 1, height: 55, padding: 10, margin: 4 }}
               theme={{
                 ...DefaultTheme,
                 colors: {
-                  primary: "#6290C3",
+                  primary: "#36F1CD",
                   accent: "#F6BD60",
                   background: "#FDFFFC",
                   surface: "#FDFFFC",
@@ -1099,4 +1104,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(GameScreen);
+export default withNavigation(connect(mapStateToProps)(GameScreen));

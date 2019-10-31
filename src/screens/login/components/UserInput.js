@@ -4,8 +4,6 @@ import { TextInput, Button, Text, DefaultTheme, DarkTheme} from "react-native-pa
 import { connect } from "react-redux";
 import { login } from '@redux/actions';
 import Spinner from "react-native-loading-spinner-overlay";
-// import { Font } from 'expo';
-// import * as Font from 'expo-font';
 
 const colorTextInput = "#FF6B35";
 
@@ -30,8 +28,8 @@ const validation = state => {
 
 class UserInput extends Component {
   state = {
-    email: "a@a.com",
-    pass: "123456",
+    email: "",
+    pass: "",
     error: false,
     firstError: false,
     loading: false
@@ -45,7 +43,7 @@ class UserInput extends Component {
   }
 
   componentDidMount() {
-    this.setState({ email: "estupidex@a.com", pass: "123456" });    
+    // this.setState({ email: "estupidex@a.com", pass: "123456" });    
 
     // Font.loadAsync({
     //   'noto-sans': require('assets/fonts/NotoSans-Regular.ttf'),
@@ -58,7 +56,7 @@ class UserInput extends Component {
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Spinner
           visible={this.props.isLoggingIn}
-          textContent={"Cargando"}
+          textContent={"Loading"}
           textStyle={styles.spinnerTextStyle}
           color={"#F6BD60"}
           textStyle = {{
@@ -98,7 +96,7 @@ class UserInput extends Component {
         />
         <TextInput
           mode="outlined"
-          label="Contraseña"
+          label="Password"
           error={this.state.error}
           secureTextEntry={true}
           style={styles.pass}
@@ -128,20 +126,20 @@ class UserInput extends Component {
           title="Iniciar Sesión"
           onPress={this.handleLogin}
           theme={{
-            ...DefaultTheme,
-            colors: {
-              primary: '#6290C3',
-              accent: '#F6BD60',
-              background: '#FDFFFC',
-              surface: '#FDFFFC',
-              text: '#FDFFFC',
-              disabled: '#FDFFFC',
-              placeholder: '#FDFFFC',
-              backdrop: '#FDFFFC',
-            }
-          }}
+              ...DefaultTheme,
+              colors: {
+                primary: '#13C4A3',
+                accent: '#F6BD60',
+                background: '#FDFFFC',
+                surface: '#FDFFFC',
+                text: '#FDFFFC',
+                disabled: '#FDFFFC',
+                placeholder: '#FDFFFC',
+                backdrop: '#FDFFFC',
+              }
+            }}
         >
-          Iniciar Sesión
+          LOG IN
         </Button>
         <Button
             title="Sign Up"
@@ -150,7 +148,7 @@ class UserInput extends Component {
             theme={{
               ...DefaultTheme,
               colors: {
-                primary: '#6290C3',
+                primary: '#32322C',
                 accent: '#F6BD60',
                 background: '#FDFFFC',
                 surface: '#FDFFFC',
@@ -161,7 +159,7 @@ class UserInput extends Component {
               }
             }}
           >
-            Regístrate
+          SIGN UP
           </Button>
       </View>
     );

@@ -32,7 +32,7 @@ class SignUp extends Component {
         }}
       >
         <View style={{ flex: 1 }} />
-          <Button onPress={this.handleGuest} mode="outlined">Guest</Button>
+          <Button  onPress={this.handleGuest} mode="contained">Guest</Button>
         <View style={{ flex: 1 }} />
       </View>
     );
