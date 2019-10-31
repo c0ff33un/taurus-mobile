@@ -1,35 +1,17 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, View, Text, FlatList } from "react-native";
+import { ScrollView, StyleSheet, View, Text} from "react-native";
 import { connect } from "react-redux";
 
 import getEnvVars from '../../../environment'
 
 import { Button, TextInput, DefaultTheme } from 'react-native-paper';
-import { withNavigation } from 'react-navigation';
 import { Dimensions } from "react-native";
-
-import { Col, Row, Grid } from "react-native-easy-grid";
-
-const formatData = (data, numColumns) => {
-  if(data!=null){
-    const numberOfFullRows = Math.floor(data.length / numColumns);
-
-    let numberOfElementsLastRow = data.length - (numberOfFullRows * numColumns);
-    while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
-      data.push({ key: `blank-${numberOfElementsLastRow}`, empty: true });
-      numberOfElementsLastRow++;
-    }
-  
-  }
-
-  return data;
-};
 
 const CELL_SIZE = 25;
 const WIDTH = 625;
 const HEIGHT = 625;
 
-class Game extends React.Component {
+class GameScreen extends React.Component {
   
   constructor(props) {
     super(props);
@@ -176,8 +158,7 @@ class Game extends React.Component {
     window: Dimensions.get('window'),
     rows: Math.floor(Dimensions.get('window').width / 25),
     cols: Math.floor(Dimensions.get('window').width / 25),
-    numColumns: 25,
-    grid: null,};
+    numColumns: 25,};
   }
 
 
@@ -235,24 +216,27 @@ class Game extends React.Component {
             exit,
             begin,
             grid,
-            players: {
-              ids: [  ]
-            }
+            players: []
           })
         }
 
         const { roomId } = this.props.screenProps
         fetch(`http://${wsUrl}/room/setup/${roomId}`, gsOptions)
         .then(response => {
+          
           return response.json()
         })
-        .catch(err => new Error(err))
+        .catch(err => {
+          console.log("#####ERROR JSON")
+          return new Error(err)
+        })
         .then(json => {
           console.log(json)
           return json
         })
         .catch((error) => {
-          console.log(error)
+          console.log("#####ERROR ALONG THE WAY",error)
+          return new Error(error)
         })
       })
       .catch(err => console.log(err))
@@ -359,11 +343,77 @@ class Game extends React.Component {
           flex: 1,
           flexDirection: 'column',
           justifyContent: 'space-around',
-          backgroundColor: 'red',
+          backgroundColor: 'white',
           alignItems: 'center',
           justifyContent: 'center'
         }}
       >
+        <View style={{flex:0.25,flexDirection: 'column',backgroundColor: 'black', alignItems:'stretch',width:Dimensions.get("window").width}}>
+        
+        <TextInput 
+            mode="outlined"
+            label="Room ID"
+            style={{flex:1, justifyContent: 'center'}}
+            value={this.props.screenProps.roomId}
+            onChangeText={room_id => this.setState({ room_id })}
+            disabled={true}
+            theme={{
+              ...DefaultTheme,
+              colors: {
+                ...DefaultTheme.colors,
+                primary: '#6290C3',
+                accent: '#272727',
+                background: '#FDFFFC',
+                text: '#272727',
+                disabled: '#FDFFFC',
+                placeholder: '#272727',
+              }
+            }}
+          />
+        <View style={{flex:1,flexDirection:'row'}}>
+        <Button
+        mode="contained"
+        dark={true}
+        title="Create Room"
+        onPress={this.setupGame}
+        style={{flex:1, height: 60, padding: 10, margin:4}}
+        theme={{
+          ...DefaultTheme,
+          colors: {
+            primary: '#6290C3',
+            accent: '#F6BD60',
+            background: '#FDFFFC',
+            surface: '#FDFFFC',
+            text: '#FDFFFC',
+            disabled: '#FDFFFC',
+            placeholder: '#FDFFFC',
+            backdrop: '#FDFFFC',
+          }
+        }}
+      >Setup Game</Button>
+
+      <Button
+        mode="contained"
+        dark={true}
+        title="Join Room"
+        onPress={this.startGame}
+        style={{flex:1, height: 60, padding: 10, margin:4}}
+        theme={{
+          ...DefaultTheme,
+          colors: {
+            primary: '#6290C3',
+            accent: '#F6BD60',
+            background: '#FDFFFC',
+            surface: '#FDFFFC',
+            text: '#FDFFFC',
+            disabled: '#FDFFFC',
+            placeholder: '#FDFFFC',
+            backdrop: '#FDFFFC',
+          }
+        }}
+      >Start Game</Button>
+        </View>
+        </View>
         <View style={{flex: 1, width: 400, backgroundColor: 'white', flexDirection: 'row', flexWrap: 'wrap'}}>
           {gridItems}
         </View>
@@ -403,7 +453,17 @@ const styles = StyleSheet.create({
   
   Occupied: {
     backgroundColor: 'red'
+  },
+  
+  buttons:{
+    flex:1,
   }
 });
 
-export default connect()(Game);
+function mapStateToProps(state) {
+  return {
+    jwt: state.session.jwt
+  };
+}
+
+export default connect(mapStateToProps)(GameScreen);

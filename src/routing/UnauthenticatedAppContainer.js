@@ -16,7 +16,7 @@ const AppNavigator = createStackNavigator(
     ValidateEmail: { screen: ValidateEmailScreen, navigationOptions: { header: null } }
   },
   {
-    initialRouteName: 'Game'
+    initialRouteName: 'Login'
   }
 );
 
