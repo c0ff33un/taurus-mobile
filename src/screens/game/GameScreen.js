@@ -745,14 +745,33 @@ class GameScreen extends React.Component {
   }
 
   startGame = () => {
-    console.log(this.props.jwt)
+    const { roomId } = this.props.screenProps;
+    const options = {
+      method : 'PUT',
+    }
+    const {wsUrl} = getEnvVars
+    fetch(`http://${wsUrl}/room/start/${roomId}`, options)
+      .then(response => {
+        console.log("1111111111111111111111111",response.body)
+        return response
+      })
+      .catch((error) => {
+        console.log(error)
+        return error
+      })
+      .then(json => {
+        console.log("2222222222222222222222222",json)
+        return json
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
-  
   moveMessage = (direction) => {
-    //const { ws } = this.props;
+    const { ws } = this.props.screenProps;
     const obj = {"type": "move", "direction" : direction};
     console.log(direction);
-    //ws.send(JSON.stringify(obj));
+    ws.send(JSON.stringify(obj));
   }
   
   keyPressed = (key) => {
@@ -786,7 +805,7 @@ class GameScreen extends React.Component {
   render() {
     const { players } = this.props;
     const { cols, rows } = this.state;
-    const { grid } = this.state;
+    const { grid } = this.props.screenProps;
     var draw = false;
     var gridItems = null;
     if (grid !== null) {
@@ -800,7 +819,7 @@ class GameScreen extends React.Component {
       //   drawGrid[y * cols + x] = {"occupied": true};
       // }
       console.log("CHECK THIS");
-      console.log(drawGrid);
+      // console.log(drawGrid);
       gridItems = drawGrid.map((cell, index) => {
         const x = Math.floor(index / cols), y = index % cols;
         const key = x.toString() + '-' + y.toString();
@@ -821,8 +840,8 @@ class GameScreen extends React.Component {
       }
       )
     }
-    console.log("gridItems", gridItems)
-    console.log('GameProps:', this.props)
+    // console.log("gridItems", gridItems)
+    // console.log('GameProps:', this.props)
     return (
       <View
         style={{
@@ -910,14 +929,14 @@ class GameScreen extends React.Component {
         <View style={{flex: 0.75, width: 400}}>
           {/* Up */}
           <View style={{flex:1, alignSelf:'center'}}>
-            <Button style={{height: 100, width: 150, backgroundColor: "black"}} mode="oulined" onPress={console.log("Arriba")}>Up</Button>
+            <Button style={{height: 100, width: 150, backgroundColor: "black"}} mode="oulined" onPress={this.keyPressed("u")}>Up</Button>
           </View>
           {/* Left Right */}
-          <View style={{flex:1, flexDirection:"row"}}>
+          <View style={{flex:1, flexDirection:"row", backgroundColor: 'magenta'}}>
             <View style={{flex: 1, alignSelf: "flex-start"}}>
               <Button style={{height: 100, width: 150, backgroundColor: "black"}} mode="outlined" onPress={this.keyPressed("l")}>Left</Button>
             </View>
-            <View style={{flex: 0.6, alignSelf: "flex-end"}}>
+            <View style={{flex: 0.6, alignSelf: "flex-end", backgroundColor: 'cyan'}}>
             <Button style={{height: 100, width: 150, backgroundColor: "black"}} mode="contained" onPress={this.keyPressed("r")}>Right</Button>
             </View>
           </View>
