@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, Linking } from "react-native";
-// import { Button } from "react-native-paper";
+ import { Button } from "react-native-paper";
+ import { guestLogin } from '@redux/actions';
 // import { SocialIcon } from "react-native-elements";
 import getEnvVars from "taurusMobile/environment";
 // import { Google, /*Facebook,*/ /*AuthSession*/ } from "expo";
@@ -12,6 +13,12 @@ class SignUp extends Component {
   state = {
     loading: false
   };
+
+  handleGuest = () => {
+    console.log("Guest")
+    this.props.dispatch(guestLogin())
+    console.log(this.props.message)
+  } 
 
   render() {
     return (
@@ -25,7 +32,7 @@ class SignUp extends Component {
         }}
       >
         <View style={{ flex: 1 }} />
-        
+          <Button onPress={this.handleGuest} mode="outlined">Guest</Button>
         <View style={{ flex: 1 }} />
       </View>
     );
