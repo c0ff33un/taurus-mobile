@@ -211,10 +211,13 @@ export function login(email, password) {
     return fetch(apiUrl, options)
       .then(res => res.json())
       .then(res => {
+        console.log(res)
         if(!res.data){
-          dispatch(receiveJWTError("waat"))
+          msg = res.errors[0].message
+          dispatch(receiveJWTError(msg))
         } else {
           jwt = res.data.login.jwt
+          console.log(jwt)
           dispatch(receiveJWT(jwt))
           console.log(`jwt: ${jwt}`)
           
@@ -222,12 +225,12 @@ export function login(email, password) {
         return res
       })
       .catch(error => {throw new Error(error)})
-      .then(res => {
-        const user = {
-            data: res.data.login.user,
-            token: jwt
-        }
-      })
+      // .then(res => {
+      //   const user = {
+      //       data: res.data.login.user,
+      //       token: jwt
+      //   }
+      // })
   }
 }
 
