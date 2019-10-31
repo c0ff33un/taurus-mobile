@@ -752,7 +752,21 @@ class GameScreen extends React.Component {
   };
 
   startGame = () => {
-    console.log(this.props.jwt);
+    const {roomId} = this.props.screenProps
+    const {wsUrl} = getEnvVars
+    const options = {
+      method: 'PUT',
+    }
+
+    fetch(`http://${wsUrl}/room/start/${roomId}`, options)
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        return json
+      })
+      .catch(err => new Error(err))
+
+
   };
 
   moveMessage = direction => {
