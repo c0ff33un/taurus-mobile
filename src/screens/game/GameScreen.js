@@ -812,7 +812,7 @@ class GameScreen extends React.Component {
       case "u":
         this.moveMessage("up");
         break;
-      case "d":
+      case "r":
         this.moveMessage("right");
         break;
       default:
@@ -821,21 +821,20 @@ class GameScreen extends React.Component {
   };
 
   render() {
-    const { players } = this.props;
     const { cols, rows } = this.state;
-    const { grid } = this.props.screenProps;
+    const { grid, players} = this.props.screenProps;
     var draw = false;
     var gridItems = null;
     if (grid !== null) {
       draw = true;
       const drawGrid = [...grid];
-      // for (var key in players) {
-      //   var x = players[key]["x"];
-      //   var y = players[key]["y"];
-      //   console.log(players[key])
-      //   console.log(x, y)
-      //   drawGrid[y * cols + x] = {"occupied": true};
-      // }
+      for (var key in players) {
+        var x = players[key]["x"];
+        var y = players[key]["y"];
+        console.log(players[key])
+        console.log(x, y)
+        drawGrid[y * cols + x] = {"occupied": true};
+      }
       console.log("CHECK THIS");
       // console.log(drawGrid);
       gridItems = drawGrid.map((cell, index) => {
@@ -871,16 +870,16 @@ class GameScreen extends React.Component {
       >
         <View
           style={{
+            flex: 0.2,
             flexDirection: "column",
-            backgroundColor: "black",
+            backgroundColor: "white",
             alignItems: "stretch",
             width: Dimensions.get("window").width
           }}
         >
           <TextInput
             mode="outlined"
-            label="Room ID"
-            style={{ flex: 1, justifyContent: "center" }}
+            style={{ flex: 0.1, justifyContent: "center" }}
             value={this.props.screenProps.roomId}
             onChangeText={room_id => this.setState({ room_id })}
             disabled={true}
@@ -897,11 +896,10 @@ class GameScreen extends React.Component {
               }
             }}
           />
-          <View style={{ flex: 1, flexDirection: "row" }}>
+          <View style={{ flex: 3, marginTop: 20, flexDirection: "row" }}>
             <Button
-              mode="contained"
+              mode="outlined"
               dark={true}
-              title="Create Room"
               onPress={this.setupGame}
               style={{ flex: 1, height: 60, padding: 10, margin: 4 }}
               theme={{
