@@ -39,9 +39,6 @@ class LobbyScreen extends Component {
 
           this.props.screenProps.connect(this.state.room_id, this.props.jwt)
           this.props.navigation.navigate({routeName: 'Game',})
-          // this.props.screenProps.ws.onopen = () => {
-          //   
-          // }
         }
         return res
       })
