@@ -39,37 +39,39 @@ class App extends Component {
     }
 
     ws.onmessage = (e) => {
-      var message = JSON.parse(e.data);
-      switch (message.type) {
-        case "win":
-          console.log(message.id)
-          break;
-        case "connect":
-          var id = message.id;
-          console.log("User " + id + " Connected");
-          this.setState(prevState => ({...prevState,
-            players : {...prevState.players,
-              [id] : {}
-            },
-            messageLog : [...prevState.messageLog, ("User " + id + " Connected")]
-          }));
-          break;
-        case "message":
-          this.setState(prevState => ({...prevState,
-            messageLog : [...prevState.messageLog, message.text]}
-          ))
-          break;
-        case "move":
-          this.updatePlayers(message);
-          break;
-        case "grid":
-          const { grid } = message;
-          this.setState({ grid });
-          break;
-        default:
-          console.log("Unhandled Message:")
-          console.log(message);
-          break;
+      const messages = e.data.split("\n")
+      for (var i = 0; i < messages.length - 1; ++i) {
+        const message = JSON.parse(messages[i])
+        console.log("message", message)
+        switch (message.type) {
+          case "connect":
+            const id = message.id
+            const handle = message.handle
+            console.log("User " + id + " Connected");
+            this.setState(prevState => ({...prevState,
+              players : {...prevState.players,
+                [id] : {}
+              },
+              messageLog : [...prevState.messageLog, ("User " + handle + " Connected")]
+            }));
+            break;
+          case "message":
+            this.setState(prevState => ({...prevState,
+              messageLog : [...prevState.messageLog, message.text]}
+            ))
+            break;
+          case "move":
+            this.updatePlayers(message);
+            break;
+          case "grid":
+            const { grid } = message;
+            this.setState({ grid });
+            break;
+          default:
+            console.log("Unhandled Message:")
+            console.log(message);
+            break;
+        }
       }
     }
 
