@@ -29,10 +29,12 @@ class TaurusApp extends Component {
         <Fragment>
           {authenticated ? (
             <AuthenticatedAppContainer
+              screenProps = {this.props.appProps}
               style={styles.container}
             />
           ) : (
             <UnauthenticatedAppContainer
+              screenProps = {this.props.appProps}
               style={styles.container}
             />
           )}

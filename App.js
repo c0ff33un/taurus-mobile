@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-
+import getEnvVars from './environment'
 import TaurusApp from './src/TaurusApp'
 import configureStore from "@redux/store";
+import AuthenticatedAppContainer from "./src/routing/AuthenticatedAppContainer"
 
 const store = configureStore()
-
 
 class App extends Component {
   constructor(props) {
@@ -29,18 +29,21 @@ class App extends Component {
   }
 
   connect = (roomId, token) => {
-    const apiURL = process.env.REACT_APP_GAME_URL
-    var ws = new W3CWebSocket(`ws://${apiURL}/ws/${roomId}?token=${token}`);
+    const { wsUrl } = getEnvVars
+    var ws = new W3CWebSocket(`ws://${wsUrl}/ws/${roomId}?token=${token}`);
 
     ws.onopen = () => {
       console.log("Connected");
-      this.setState({ ws, roomId });
-      ws.send(JSON.stringify({type: "connect", "token": token}));
+      this.setState({ ws, roomId, ready: true});
+      ws.send(JSON.stringify({type: "connect"}));
     }
 
     ws.onmessage = (e) => {
       var message = JSON.parse(e.data);
       switch (message.type) {
+        case "win":
+          console.log(message.id)
+          break;
         case "connect":
           var id = message.id;
           console.log("User " + id + " Connected");
@@ -71,20 +74,22 @@ class App extends Component {
     }
 
     ws.onclose = e => {
-      console.log("@@@\nCLOSE\n@@@");
+      console.log(`@@@\n${JSON.stringify(e)}\n@@@`)
+      this.setState({ready:false})
     }
 
     ws.onerror = e => {
-      console.log("@@@\nERROR\n@@@")
+      console.log(`@@@\n${JSON.stringify(e)}\n@@@`)
+      this.setState({ready:false})
     }
   }
 
   render() {
     const connect = this.connect;
-    const { ws, messageLog, roomId, players, grid } = this.state;
+    const { ready, ws, messageLog, roomId, players, grid } = this.state;
     return (
       <Provider store={store} >
-        <TaurusApp appProps={{ws, roomId, players, messageLog, connect, grid}}/>
+        <TaurusApp appProps={{ready, ws, roomId, players, messageLog, connect, grid}}/>
       </Provider>
     );
   }

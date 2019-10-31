@@ -208,7 +208,7 @@ export function login(email, password) {
         query: `mutation {login(user:{email:"${email}" password: "${password}"}){user{id handle email guest} jwt}}`
       })
     }
-    return fetch(`http://${apiUrl}`, options)
+    return fetch(`${apiUrl}`, options)
       .then(res => res.json())
       .then(res => {
         console.log(res)

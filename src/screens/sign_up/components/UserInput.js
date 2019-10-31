@@ -35,31 +35,39 @@ export default class UserInput extends Component {
 
     if (this.validateAll()) {
       const { apiUrl } = getEnvVars
-      const url = `${apiUrl}/signup`;
 
       let formdata = new FormData();
 
       formdata.append("user[email]", this.state.email)
       formdata.append("user[handle]", this.state.user)
       formdata.append("user[password]", this.state.pass)
-      formdata.append("user[avatar]", {uri: this.state.uri, name: 'elon.jpg', type: 'image/jpeg'})
 
       const options = {   
         method: 'POST',
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
         },
-        body: formdata
+        body: JSON.stringify({
+          "query": `mutation {
+            signup(user:{handle:"${this.state.user}" email:"${this.state.email}" password:"${this.state.pass}"}){
+              id
+              handle
+              email
+              guest
+            }
+          }`
+        })
       }
 
-      fetch(url,options)
+      fetch(apiUrl,options)
         .then(response => {
           if(response.ok){
             console.log('Success', response);
             this.setState({ loading: false });
             this.props.navigation.navigate('ValidateEmail');
           } else {
-            console.log('Error:', response)
+            console.log('Error:', response.json())
             this.setState({ loading: false });
 
           }

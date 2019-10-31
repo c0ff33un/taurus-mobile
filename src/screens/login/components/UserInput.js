@@ -40,7 +40,7 @@ class UserInput extends Component {
   }
 
   componentDidMount() {
-    this.setState({ email: "a@a.com", pass: "123456" });    
+    this.setState({ email: "estupidex@a.com", pass: "123456" });    
 
     // Font.loadAsync({
     //   'noto-sans': require('assets/fonts/NotoSans-Regular.ttf'),

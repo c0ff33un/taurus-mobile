@@ -5,8 +5,7 @@ import { connect } from "react-redux";
 import getEnvVars from '../../../environment'
 
 import { Button, TextInput, DefaultTheme } from 'react-native-paper';
-
-
+import { withNavigation } from 'react-navigation';
 
 class LobbyScreen extends Component {
   state = {
@@ -24,7 +23,7 @@ class LobbyScreen extends Component {
         "Authorization": `Bearer ${this.props.jwt}`
       },
       body: JSON.stringify({
-        query: `mutation{room{id}}`
+        query: "mutation{room{id}}"
       })
     }
     const {apiUrl} = getEnvVars
@@ -37,6 +36,12 @@ class LobbyScreen extends Component {
           console.log("Error")
         } else {
           this.setState({room_id: res.data.room.id})
+
+          this.props.screenProps.connect(this.state.room_id, this.props.jwt)
+          this.props.navigation.navigate({routeName: 'Game',})
+          // this.props.screenProps.ws.onopen = () => {
+          //   
+          // }
         }
         return res
       })
@@ -137,4 +142,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps)(LobbyScreen);
+export default withNavigation(connect(mapStateToProps)(LobbyScreen));
