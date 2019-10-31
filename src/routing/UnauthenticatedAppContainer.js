@@ -4,17 +4,19 @@ import { createStackNavigator } from 'react-navigation-stack'
 import Login from '../screens/login/LoginScreen'
 import SignUp from '../screens/sign_up/SignUpScreen'
 import ValidateEmailScreen from '../screens/sign_up/ValidateEmailScreen'
+import Game from '../screens/game/GameScreen'
 
 // you can also import from @react-navigation/native
 
 const AppNavigator = createStackNavigator(
   {
+    Game: { screen: Game, navigationOptions: { header: null }},
     Login: { screen: Login, navigationOptions: { header: null }},
     SignUp: { screen: SignUp, navigationOptions: { header: null }},
     ValidateEmail: { screen: ValidateEmailScreen, navigationOptions: { header: null } }
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Game'
   }
 );
 

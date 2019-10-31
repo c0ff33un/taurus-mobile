@@ -76,7 +76,7 @@ class App extends Component {
     const { ws, messageLog, roomId, players, grid } = this.state;
     return (
       <Provider store={store} >
-        <TaurusApp appProps={{ws, roomId, players, messageLog, connect, grid}}/>
+        <TaurusApp appProps={{ws, roomId, players, messageLog, connect, grid}} />
       </Provider>
     );
   }
