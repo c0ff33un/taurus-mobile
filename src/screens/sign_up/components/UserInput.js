@@ -31,55 +31,79 @@ export default class UserInput extends Component {
 
   signUp = () => {
     //var cryptoPass = encrypt(pass);
+    const { apiUrl } = getEnvVars
     this.setState({ loading: true })
 
-    if (this.validateAll()) {
-      const { apiUrl } = getEnvVars
-
-      let formdata = new FormData();
-
-      formdata.append("user[email]", this.state.email)
-      formdata.append("user[handle]", this.state.user)
-      formdata.append("user[password]", this.state.pass)
-
-      const options = {   
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "query": `mutation {
-            signup(user:{handle:"${this.state.user}" email:"${this.state.email}" password:"${this.state.pass}"}){
-              id
-              handle
-              email
-              guest
-            }
-          }`
-        })
-      }
-
-      fetch(apiUrl,options)
-        .then(response => {
-          if(response.ok){
-            console.log('Success', response);
-            this.setState({ loading: false });
-            this.props.navigation.navigate('ValidateEmail');
-          } else {
-            console.log('Error:', response.json())
-            this.setState({ loading: false });
-
-          }
-        })
-        .catch( error => {
-          console.log(error)
-          this.setState({ loading: false });
-          return error;
-        })
-    } else {
-      this.setState({ loading: false })
+    const data = {
+      "query": `mutation {signup(user:{handle:"${this.state.user}" email:"${this.state.email}" password:"${this.state.pass}"}){id handle email guest}}`
     }
+    
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }
+
+    return fetch(apiUrl, options)
+    .then(response => response.json())
+    .catch(error => console.log(error))
+    .then(response => {
+      if(!response.data){
+        this.setState({ loading: false });
+        throw new Error(response.errors[0].message)
+      }else{
+        return response
+      }
+    })
+    .catch(error => console.log(error))
+    .then(response => {
+      const user = {
+        data: response.data.signup.user,
+      }
+      this.setState({ loading: false });
+      this.props.navigation.navigate('ValidateEmail');
+      
+      // -------- Do stuff here ----------
+    
+    })
+    
+
+    // if (this.validateAll()) {
+    //   const { apiUrl } = getEnvVars
+
+    //   const options = {   
+    //     method: 'POST',
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Accept": "application/json"
+    //     },
+    //     body: `"query": "mutation {signup(user:{handle:\"${this.state.user}\" email:\"${this.state.email}\" password:\"${this.state.pass}\"}){id handle email guest}}"`
+    //   }
+
+    //   console.log(options)
+
+    //   fetch(apiUrl,options)
+    //     .then(res => res.json)
+    //     .then(res => console.log(res.data))
+    //     // .then(response => {
+    //     //   if(response.ok){
+    //     //     console.log('Success', response);
+    //     //     this.setState({ loading: false });
+    //     //     this.props.navigation.navigate('ValidateEmail');
+    //     //   } else {
+    //     //     console.log('Error:', response)
+    //     //     this.setState({ loading: false });
+
+    //     //   }
+    //     // })
+    //     // .catch( error => {
+    //     //   console.log(error)
+    //     //   this.setState({ loading: false });
+    //     //   return error;
+    //     // })
+    // } else {
+    //   this.setState({ loading: false })
+    // }
 
       
   }

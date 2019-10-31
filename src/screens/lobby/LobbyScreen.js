@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import getEnvVars from '../../../environment'
 
+import { logout } from '@redux/actions';
+
 import { Button, TextInput, DefaultTheme } from 'react-native-paper';
 import { withNavigation } from 'react-navigation';
 
@@ -12,6 +14,24 @@ class LobbyScreen extends Component {
     room_id: "",
     jwt: ""
   };
+
+  handleLogOut = () => {
+    const options = {
+      method : 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': "Bearer " + this.props.jwt,
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        query: `mutation {logout{msg}}`
+      })
+    }
+    const {apiUrl} = getEnvVars
+    fetch(apiUrl, options)
+      .catch(error => {throw new Error(error)})
+    this.props.dispatch(logout())
+  }
 
   handleCreateRoom = () => {
     console.log(this.props.jwt)
@@ -33,7 +53,7 @@ class LobbyScreen extends Component {
       .then(res => {
         console.log(res)
         if(!res.data){
-          console.log("Error")
+          console.log("No data")
         } else {
           this.setState({room_id: res.data.room.id})
 
@@ -110,6 +130,9 @@ class LobbyScreen extends Component {
               }
             }}
           >Join Room</Button>
+        </View>
+        <View>
+          <Button onPress={this.handleLogOut}>LOG OUT</Button>
         </View>
 
       </ScrollView>

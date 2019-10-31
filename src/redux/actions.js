@@ -212,23 +212,62 @@ export function login(email, password) {
       .then(res => res.json())
       .then(res => {
         console.log(res)
-        if(res.data==null){
-          dispatch(receiveJWTError(res))
+        if(!res.data){
+          msg = res.errors[0].message
+          dispatch(receiveJWTError(msg))
         } else {
           console.log(res)
           jwt = res.data.login.jwt
           dispatch(receiveJWT(jwt))
-          console.log(`jwt: ${jwt}`)
+          
         }
         return res
       })
-      .catch(err => console.log(err))
-      .then(res => {
-        // const user = {
-        //     data: res.data.login.user,
-        //     token: jwt
-        // }
+      .catch(error => {throw new Error(error)})
+      // .then(res => {
+      //   const user = {
+      //       data: res.data.login.user,
+      //       token: jwt
+      //   }
+      // })
+  }
+}
+
+export function guestLogin() {
+  return (dispatch) => {
+    dispatch(requestJWT())
+    const { apiUrl } = getEnvVars
+    
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        query: `mutation {guest{user{id handle email guest} jwt}}`
       })
+    }
+    return fetch(apiUrl, options)
+      .then(res => res.json())
+      .then(res => {
+        console.log(res)
+        if(!res.data){
+          msg = res.errors[0].message
+          dispatch(receiveJWTError(msg))
+        } else {
+          jwt = res.data.guest.jwt
+          dispatch(receiveJWT(jwt))
+        }
+        return res
+      })
+      .catch(error => {throw new Error(error)})
+      // .then(res => {
+      //   const user = {
+      //       data: res.data.login.user,
+      //       token: jwt
+      //   }
+      // })
   }
 }
 

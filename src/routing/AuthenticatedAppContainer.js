@@ -22,6 +22,7 @@ const AppNavigator = createStackNavigator(
   }
 );
 
+
 const AuthenticatedAppContainer = createAppContainer(AppNavigator);
 
 export default AuthenticatedAppContainer

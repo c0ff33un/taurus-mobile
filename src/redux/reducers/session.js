@@ -11,7 +11,8 @@ function session(
     jwt: null,
     isLoggingIn: false,
     needsValidation: false,
-    loginError: false
+    loginError: false,
+    message: ""
   }, 
   action
 ) {

@@ -17,6 +17,10 @@ const styles = {
   pass: {
     margin: 8,
     marginTop: 2
+  },
+  error: {
+    color: "red",
+    fontStyle: "italic"
   }
 };
 
@@ -37,6 +41,7 @@ class UserInput extends Component {
     this.setState({ firstError: true })
     const { email, pass } = this.state
     this.props.dispatch(login(email, pass))
+    console.log(this.props.message)
   }
 
   componentDidMount() {
@@ -48,11 +53,6 @@ class UserInput extends Component {
   }
 
   render() {
-
-    if (this.props.loginError && this.state.firstError) {
-      alert("Login error")
-      this.setState({firstError: false})
-    }
 
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
@@ -68,6 +68,14 @@ class UserInput extends Component {
           animation={"fade"}
           size={"large"}
         />
+        {this.props.loginError && this.state.firstError ? (
+          <View style={{ marginLeft: 8 }}>
+            <Text style={styles.error}>
+              {" "}
+              {this.props.message}
+            </Text>
+          </View>
+        ) : null}
         <TextInput
           mode="outlined"
           label="Email"
@@ -160,9 +168,11 @@ class UserInput extends Component {
   }
 }
 
+
+
 const mapStateToProps = (state) => {
-  const { isLoggingIn, jwt, loginError } = state.session
-  return { isLoggingIn, jwt, loginError }
+  const { isLoggingIn, jwt, loginError, message } = state.session
+  return { isLoggingIn, jwt, loginError, message }
 }
 
 export default connect(mapStateToProps)(UserInput)

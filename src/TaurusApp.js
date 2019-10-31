@@ -12,19 +12,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   statusBar: {
-    backgroundColor: "#FFF",
+    backgroundColor: "green",
     height: getStatusBarHeight()
   }
 });
 
 
-class TaurusApp extends Component {
+class TaurusApp extends Component  {
 
   render() {
     console.log("Appjs", this.props);
     const { authenticated } = this.props
     return (
-      <View style={{ flex: 1 }}>
+       <View style={{ flex: 1 }}>
         <View style={styles.statusBar} />
         <Fragment>
           {authenticated ? (
@@ -48,6 +48,7 @@ const mapStateToProps = state => {
   const { jwt } = state.session
   const authenticated = jwt || false
   return { authenticated }
+
 };
 
 export default connect(mapStateToProps)(TaurusApp);

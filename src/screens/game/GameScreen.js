@@ -25,14 +25,161 @@ const formatData = (data, numColumns) => {
   return data;
 };
 
-class GameScreen extends Component {
-  state = {
+const CELL_SIZE = 25;
+const WIDTH = 625;
+const HEIGHT = 625;
+
+class Game extends React.Component {
+  
+  constructor(props) {
+    super(props);
+    const rows = HEIGHT / CELL_SIZE, cols = WIDTH / CELL_SIZE;
+    const grid = [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ];
+
+    // for (let row = 0; row < rows; ++row) {
+    //   for (let col = 0; col < cols; ++col) {
+    //     const wall = false;
+    //     grid.push({row, col, wall});
+    //   }
+    // }
+  this.state = {
+    rows, 
+    cols, 
+    grid,
+    players: {},    
     window: Dimensions.get('window'),
     rows: Math.floor(Dimensions.get('window').width / 25),
     cols: Math.floor(Dimensions.get('window').width / 25),
     numColumns: 25,
-    grid: null,
-  };
+    grid: null,};
+  }
+
 
   setupGame = () => {
     console.log(this.props.jwt)
@@ -114,157 +261,149 @@ class GameScreen extends Component {
   startGame = () => {
     console.log(this.props.jwt)
   }
+  
+  moveMessage = (direction) => {
+    const { ws } = this.props;
+    const obj = {"type": "move", "direction" : direction};
+    console.log(direction);
+    ws.send(JSON.stringify(obj));
+  }
+  
+  keyPressed = (event) => {
+    event.preventDefault();
 
-  renderItem = ({ item, index }) => {
-    if (item.empty === true) {
-      return <View style={[styles.item, styles.itemInvisible]} />;
+    while( (new Date().getTime() - lastPressed) < 200 )
+    {
+
+    }
+    console.log("Sending request")
+    console.log(new Date().getTime())
+    lastPressed = new Date().getTime()
+    switch (event.key) {
+      case 'a':
+      case 'A':
+      case 'ArrowLeft':
+        this.moveMessage('left');
+        break;
+      case 's':
+      case 'S':
+      case 'ArrowDown':
+        this.moveMessage('down');
+        break;
+      case 'w':
+      case 'W':
+      case 'ArrowUp':
+        this.moveMessage('up');
+        break;
+      case 'd':
+      case 'D':
+      case 'ArrowRight':
+        this.moveMessage('right');
+        break;
+      default:
+        break;
+    }
+  }
+
+  render() {
+    const { players } = this.props;
+    const { cols, rows } = this.state;
+    const { grid } = this.state;
+    var draw = false;
+    var gridItems = null;
+    console.log("RENDER")
+    if (grid !== null) {
+      draw = true;
+      const drawGrid = [...grid];
+      // for (var key in players) {
+      //   var x = players[key]["x"];
+      //   var y = players[key]["y"];
+      //   console.log(players[key])
+      //   console.log(x, y)
+      //   drawGrid[y * cols + x] = {"occupied": true};
+      // }
+      console.log("CHECK THIS");
+      console.log(drawGrid);
+      gridItems = drawGrid.map((cell, index) => {
+        const x = Math.floor(index / cols), y = index % cols;
+        const key = x.toString() + '-' + y.toString();
+        var style;
+        if (cell && !cell.occupied) {
+          style = {...styles.Wall, ...styles.Cell};
+        } else if( !cell.occupied ) {
+          style = {...styles.Cell}
+        } else if( x == 0 || x == 24 || y == 0 || y == 24 ) {
+          style = {...styles.Win, ...styles.Cell}
+        } else {
+          style = {...styles.Occupied, ...styles.Cell}
+        }
+
+        return <View
+            key={key}
+            style={style}></View>
+      }
+      )
+    }
+    console.log("gridItems", gridItems)
+    console.log('GameProps:', this.props)
+    const items = []
+    for (let i = 0; i < 20; ++i) {
+      items.push(<View key={i * 4} style={{width: 50, height: 50, backgroundColor: 'powderblue'}} />);
+      items.push(<View key={i * 4 + 1} style={{width: 50, height: 50, backgroundColor: 'skyblue'}} />);
+      items.push(<View key={i * 4 + 2} style={{width: 50, height: 50, backgroundColor: 'steelblue'}} />);
+      items.push(<View key={i * 4 + 3} style={{width: 50, height: 50, backgroundColor: 'powderblue'}} />);
     }
     return (
       <View
-        style={styles.item}
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          backgroundColor: 'red',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
       >
-        <Text style={styles.itemText}>{item.key}</Text>
-      </View>
-    );
-  };
-  
-
-  render() {
-    return (  
-      <ScrollView>
-        <TextInput 
-          mode="outlined"
-          label="Room ID"
-          style={styles.lobby}
-          value={this.props.screenProps.roomId}
-          onChangeText={lobby => this.setState({ lobby })}
-          disabled={true}
-          theme={{
-            ...DefaultTheme,
-            colors: {
-              ...DefaultTheme.colors,
-              primary: '#6290C3',
-              accent: '#272727',
-              background: '#FDFFFC',
-              text: '#272727',
-              disabled: '#FDFFFC',
-              placeholder: '#272727',
-            }
-          }}
-        />
-        <View style={styles.buttons}>
-          <Button
-            mode="contained"
-            dark={true}
-            title="Iniciar Sesión"
-            onPress={this.setupGame}
-            style={{flex: 1}}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#6290C3',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              }
-            }}
-          >Setup Game</Button>
-
-          <Button
-            mode="contained"
-            dark={true}
-            title="Iniciar Sesión"
-            onPress={this.startGame}
-            style={{paddingLeft: 10, flex: 1}}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#6290C3',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              }
-            }}
-          >Start Game</Button>
+        <View style={{flex: 1, width: 400, backgroundColor: 'white', flexDirection: 'row', flexWrap: 'wrap'}}>
+          {gridItems}
         </View>
-
-        <Button 
-        style={{position:'absolute', top: Dimensions.get('window').height, left: Dimensions.get('window').height -10}}             
-        theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#6290C3',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              }
-            } }
-        >
-          UP
-        </Button>
-      </ScrollView>
-      
-    );
+      </View>
+    );  
   }
 }
 
 const styles = StyleSheet.create({
-  grid:{
-    borderColor: 'yellow',
-    backgroundColor: 'black',
+  Container: {
     flex: 1,
-  },
-  board:{
-    flex: 1,
-    backgroundColor: "red",
-  },
-  lobby: {
-    flex: 0,
-    margin: 8,
-    borderColor: "gray"
-  },
-  buttons: {
-    flex: 1, 
-    flexDirection: 'row', 
-    alignSelf: 'center',
-    backgroundColor: 'black',
-  },
-  container: {
-    flex: 1,
-    marginVertical: 20,
-  },
-  item: {
-    backgroundColor: '#4D243D',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'yellow'
+  },
+  
+  Board: {
     flex: 1,
-    margin: 1,
-    height: Dimensions.get('window').width / 25, // approximate a square
+    backgroundColor: "black",
   },
-  itemInvisible: {
-    backgroundColor: 'transparent',
+  
+  Cell: { 
+    width: 25,
+    height: 25,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: 'white'
   },
-  itemText: {
-    color: '#fff',
+  
+  Win: {
+    backgroundColor: '#32a852'
   },
+  
+  Wall: {
+    backgroundColor: 'black'
+  },
+  
+  Occupied: {
+    backgroundColor: 'red'
+  }
 });
 
-function mapStateToProps(state) {
-  return {
-    jwt: state.session.jwt
-  };
-}
-
-export default withNavigation(connect(mapStateToProps)(GameScreen));
+export default connect()(Game);
