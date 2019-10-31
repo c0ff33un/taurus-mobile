@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   statusBar: {
-    backgroundColor: "green",
+    backgroundColor: "transparent",
     height: getStatusBarHeight()
   }
 });
