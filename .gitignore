@@ -91,3 +91,4 @@ RNTester/Pods/*
 /schema-rncore.json
 
 environment.js
+.vscode/
