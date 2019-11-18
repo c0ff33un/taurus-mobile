@@ -125,7 +125,6 @@ class TaurusApp extends Component  {
     const { authenticated } = this.props
     return (
        <View style={{ flex: 1 }}>
-        <View style={styles.statusBar} />
         <Fragment>
           {authenticated ? (
             <AuthenticatedAppContainer

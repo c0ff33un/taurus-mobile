@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
-import { Text, View, SafeAreaView, Platform, StyleSheet, Image } from 'react-native'
+import { View, SafeAreaView, Platform, StyleSheet, Image } from 'react-native'
+import { Text, Title } from 'react-native-paper'
 
 
-function Header(props) {
+export default function Header(props) {
+  
   return (
     <View style={styles.container}>
-        <Image style={styles.image}
-          source={require('../../../../assets/logo/logo.png')}
+      <Text style={styles.text}>
+        τrus
+      </Text>
+      <Image style={styles.image}
+          source={require('../../../../assets/logo/logo_black.png')}
         />
     </View>
   )
@@ -15,13 +20,20 @@ function Header(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 20,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  text:{
+    flex: 1,
+    alignSelf: 'center',
+    fontSize: 90,
+    fontFamily: 'sans-serif-light',
+    fontWeight: "100",
   },
   image: {
     resizeMode: 'center',
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+    flex: 0.5,
+    marginTop: -550,
+  },
 })
-export default Header;

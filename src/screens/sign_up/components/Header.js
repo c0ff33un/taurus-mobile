@@ -5,21 +5,33 @@ import { Text, View, SafeAreaView, Platform, StyleSheet, Image } from 'react-nat
 function Header(props) {
   return (
     <View style={styles.container}>
-        <Image style={styles.image}
-          source={require('../../../../assets/logo/logo.png')}
-        />
+      <Text style={styles.text}>
+        τrus
+      </Text>
+      <Image style={styles.image}
+        source={require('../../../../assets/logo/logo_black.png')}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0,
+    flex: 1,
     backgroundColor: 'transparent'
   },
   image: {
     resizeMode: 'center',
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+    flex: 1,
+    marginTop: -110,
+  },
+  text:{
+    flex: 1,
+    alignSelf: 'center',
+    fontSize: 90,
+    fontFamily: 'sans-serif-light',
+    fontWeight: "100",
+  },
 })
 export default Header;

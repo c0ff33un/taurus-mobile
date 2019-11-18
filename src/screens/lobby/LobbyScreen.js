@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import { ScrollView, StyleSheet, View, Dimensions } from "react-native";
+import { Image, ScrollView, StyleSheet, View, Dimensions } from "react-native";
 import { connect } from "react-redux";
 
 import getEnvVars from '../../../environment'
 
 import { logout } from '@redux/actions';
 
-import { Button, TextInput, DefaultTheme } from 'react-native-paper';
+import { Text, Button, TextInput, DefaultTheme } from 'react-native-paper';
 import { withNavigation } from 'react-navigation';
 
 class LobbyScreen extends Component {
@@ -75,53 +75,55 @@ class LobbyScreen extends Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <TextInput 
-          mode="outlined"
-          label="Room ID"
-          style={styles.lobby}
-          value={this.state.room_id}
-          onChangeText={room_id => this.setState({ room_id })}
+        <Text style={styles.text}>
+          τrus
+        </Text>
+        <Button
+          mode="contained"
+          dark={true}
+          title="Create Room"
+          onPress={this.handleCreateRoom}
+          style={styles.createButton}
           theme={{
             ...DefaultTheme,
             colors: {
-              ...DefaultTheme.colors,
               primary: '#6290C3',
-              accent: '#272727',
+              accent: '#F6BD60',
               background: '#FDFFFC',
-              text: '#272727',
+              surface: '#FDFFFC',
+              text: '#FDFFFC',
               disabled: '#FDFFFC',
-              placeholder: '#272727',
+              placeholder: '#FDFFFC',
+              backdrop: '#FDFFFC',
             }
           }}
-        />
+        >Create Room</Button>
         <View style={styles.buttons}>
-          <Button
-            mode="contained"
-            dark={true}
-            title="Create Room"
-            onPress={this.handleCreateRoom}
-            style={{flex: 1, margin:3}}
+          <TextInput 
+            mode="outlined"
+            label="Room ID"
+            style={styles.lobby}
+            value={this.state.room_id}
+            onChangeText={room_id => this.setState({ room_id })}
             theme={{
               ...DefaultTheme,
               colors: {
+                ...DefaultTheme.colors,
                 primary: '#6290C3',
-                accent: '#F6BD60',
+                accent: '#272727',
                 background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
+                text: '#272727',
                 disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
+                placeholder: '#272727',
               }
             }}
-          >Create Room</Button>
-
+          />
           <Button
             mode="contained"
             dark={true}
             title="Join Room"
             onPress={this.handleJoinRoom}
-            style={{margin:3, flex: 1}}
+            style={styles.joinButton}
             theme={{
               ...DefaultTheme,
               colors: {
@@ -139,14 +141,14 @@ class LobbyScreen extends Component {
         </View>
         <View style={{flex:1, flexDirection:'column-reverse'}}>
           <Button 
-          mode="contained"
-          style={{flex:0.05, margin:3,}}
+          mode="text"
+          style={styles.outButton}
           dark={true}
           onPress={this.handleLogOut}
           theme={{
               ...DefaultTheme,
               colors: {
-                primary: '#E85D75',
+                primary: '#E84855',
                 accent: '#F6BD60',
                 background: '#FDFFFC',
                 surface: '#FDFFFC',
@@ -155,7 +157,8 @@ class LobbyScreen extends Component {
                 placeholder: '#FDFFFC',
                 backdrop: '#FDFFFC',
               }
-            }}>LOG OUT</Button>
+            }}><Text style={{color:'red', fontWeight:'900', 
+            fontFamily: 'sans-serif-medium',fontSize:14}}>LOG OUT</Text></Button>
         </View>
 
       </ScrollView>
@@ -172,17 +175,45 @@ function mapStateToProps(state) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
+    alignContent:'flex-start',
+  },
+  createButton:{
+    flex: 0.15, 
+    margin:7, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  joinButton:{
+    flex: 1, 
+    margin: 6, 
+    height: 58, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  outButton:{
+    flex:0.14, 
+    margin:7, 
+    alignItems: 'center', 
     justifyContent: 'center',
   },
   lobby: {
-    margin: 8,
-    width: Dimensions.get("window").width - 10
+    flex: 1,
+    marginLeft: 8,
+    width: Dimensions.get("window").width / 3
   },
   buttons: {
-    flex: 0.06, 
+    flex: 1, 
     flexDirection: 'row', 
     alignSelf: 'center'
-  }
+  },
+  text:{
+    flex: 0.3,
+    alignSelf: 'center',
+    fontSize: 90,
+    fontFamily: 'sans-serif-light',
+    fontWeight: "100",
+  },
 });
 
 export default withNavigation(connect(mapStateToProps)(LobbyScreen));

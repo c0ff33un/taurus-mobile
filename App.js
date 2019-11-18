@@ -63,7 +63,10 @@ class App extends Component {
           case "move":
             this.updatePlayers(message);
             break;
-          case "grid":
+          case "setup":
+            // To-do: Focus on grid
+            break;
+          case "start":
             const { grid } = message;
             this.setState({ grid });
             break;

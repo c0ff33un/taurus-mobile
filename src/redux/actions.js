@@ -13,7 +13,6 @@ import {
   INCREASE_MEMES_PAGE,
   REQUEST_JWT,
   RECEIVE_JWT,
-  VALIDATE_EMAIL,
   RECEIVE_JWT_ERROR,
   LOGOUT,
   SET_FINISHED,
@@ -174,10 +173,6 @@ function requestJWT() {
   return { type: REQUEST_JWT }
 }
 
-function validateEmail() {
-  return { type: VALIDATE_EMAIL }
-}
-
 function receiveJWT(jwt) {
   return { type: RECEIVE_JWT, payload: { jwt } }
 }
@@ -224,12 +219,6 @@ export function login(email, password) {
         return res
       })
       .catch(error => {throw new Error(error)})
-      // .then(res => {
-      //   const user = {
-      //       data: res.data.login.user,
-      //       token: jwt
-      //   }
-      // })
   }
 }
 
@@ -262,12 +251,6 @@ export function guestLogin() {
         return res
       })
       .catch(error => {throw new Error(error)})
-      // .then(res => {
-      //   const user = {
-      //       data: res.data.login.user,
-      //       token: jwt
-      //   }
-      // })
   }
 }
 
@@ -298,30 +281,3 @@ export function fetchComments(id) {
       })
   }
 }
-
-
-// export function selectPostMeme(uri) {
-//   return (dispatch, getState) => {
-//     dispatch(setPostMeme(uri))
-//     const { page } = getState().memesByFilter[filter]
-//     const { apiUrl } = getEnvVars
-//     const url = `${apiUrl}/memes/${filter}?page=${page}&per_page=${size}`
-//     dispatch(increaseMemesPage(filter))
-//     return fetch(url)
-//       .then(response => response.json())
-//       .then(json => {
-//         id = json.map(meme => {return meme.id})
-//         dispatch(increaseMemesPage(filter))
-//         dispatch(receiveMemes(json))
-//         dispatch(receiveFilteredMemes(filter, ids))
-//         dispatch(receivePostMeme(id))
-//         return json
-//       })
-//       .catch(error => {
-//         console.log("fetchMemes error")
-//         console.log(error)
-//         dispatch(receiveMemesError())
-//         return error;
-//       })
-//   }
-// }

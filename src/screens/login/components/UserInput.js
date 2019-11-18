@@ -7,7 +7,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 
 const colorTextInput = "#FF6B35";
 
-const styles = {
+const styles = StyleSheet.create({
   email: {
     margin: 8,
     borderColor: "gray"
@@ -17,10 +17,19 @@ const styles = {
     marginTop: 2
   },
   error: {
-    color: "red",
+    color: "white",
     fontStyle: "italic"
+  },
+  errorDiv: { 
+    flexDirection: 'row',
+    height: 30, 
+    margin: 7, 
+    backgroundColor: "#D91E36", 
+    alignItems:'center', 
+    justifyContent:'center', 
+    borderRadius: 3
   }
-};
+});
 
 const validation = state => {
   typeof state.email == String && state.email.indexOf;
@@ -32,7 +41,8 @@ class UserInput extends Component {
     pass: "",
     error: false,
     firstError: false,
-    loading: false
+    loading: false,
+    overlayColor: "",
   };
 
   handleLogin = () => {
@@ -40,14 +50,6 @@ class UserInput extends Component {
     const { email, pass } = this.state
     this.props.dispatch(login(email, pass))
     console.log(this.props.message)
-  }
-
-  componentDidMount() {
-    // this.setState({ email: "estupidex@a.com", pass: "123456" });    
-
-    // Font.loadAsync({
-    //   'noto-sans': require('assets/fonts/NotoSans-Regular.ttf'),
-    // });
   }
 
   render() {
@@ -62,15 +64,15 @@ class UserInput extends Component {
           textStyle = {{
               color: "white"
           }}
-          overlayColor={"rgba(39,39,39,1)"}
+          overlayColor={"#13C4A3"}
           animation={"fade"}
           size={"large"}
         />
         {this.props.loginError && this.state.firstError ? (
-          <View style={{ marginLeft: 8 }}>
+          <View style={styles.errorDiv}>
             <Text style={styles.error}>
               {" "}
-              {this.props.message}
+              {this.props.message.split(`"error":"`)[1].split(`"}`)[0]}
             </Text>
           </View>
         ) : null}
@@ -166,11 +168,9 @@ class UserInput extends Component {
   }
 }
 
-
-
 const mapStateToProps = (state) => {
   const { isLoggingIn, jwt, loginError, message } = state.session
-  return { isLoggingIn, jwt, loginError, message }
+  return { isLoggingIn, jwt, loginError, message, }
 }
 
 export default connect(mapStateToProps)(UserInput)
