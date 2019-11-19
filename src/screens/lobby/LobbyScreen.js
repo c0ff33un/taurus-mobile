@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { Image, ScrollView, StyleSheet, View, Dimensions } from "react-native";
-import { connect } from "react-redux";
+import React, { Component } from "react"
+import { Image, ScrollView, StyleSheet, View, Dimensions } from "react-native"
+import { connect } from "react-redux"
 
 import getEnvVars from '../../../environment'
 
-import { logout } from '@redux/actions';
+import { logout } from '@redux/ducks/session'
 
-import { Text, Button, TextInput, DefaultTheme } from 'react-native-paper';
-import { withNavigation } from 'react-navigation';
+import { Text, Button, TextInput, DefaultTheme } from 'react-native-paper'
+import { withNavigation } from 'react-navigation'
 
 class LobbyScreen extends Component {
   state = {

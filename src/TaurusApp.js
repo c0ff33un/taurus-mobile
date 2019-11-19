@@ -8,7 +8,7 @@ import UnauthenticatedAppContainer from './routing/UnauthenticatedAppContainer'
 
 import firebase from 'react-native-firebase'
 
-import { checkPermission } from '@redux/reducers/messages'
+import { checkPermission } from '@redux/ducks/messages'
 
 const styles = StyleSheet.create({
   container: {

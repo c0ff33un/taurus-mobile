@@ -4,7 +4,7 @@ import { w3cwebsocket as W3CWebSocket } from 'websocket'
 import getEnvVars from './environment'
 import TaurusApp from './src/TaurusApp'
 import configureStore from '@redux'
-import AuthenticatedAppContainer from '/src/routing/AuthenticatedAppContainer'
+import AuthenticatedAppContainer from './src/routing/AuthenticatedAppContainer'
 
 const store = configureStore()
 

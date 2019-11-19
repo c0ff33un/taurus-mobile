@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, Linking } from "react-native";
  import { Button } from "react-native-paper";
- import { guestLogin } from '@redux/actions';
+ import { guestLogin } from '@redux/ducks/session';
 // import { SocialIcon } from "react-native-elements";
 import getEnvVars from "taurusMobile/environment";
 // import { Google, /*Facebook,*/ /*AuthSession*/ } from "expo";

@@ -4,8 +4,8 @@ import { createLogger } from 'redux-logger'
 import { persistStore, persistReducer } from 'redux-persist'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 import storage from 'redux-persist/lib/storage'
-import wsMiddleware from './Middleware/websocket'
-import rootReducer from "./reducers";
+import wsMiddleware from './middleware/websocket'
+import rootReducer from './ducks'
 
 const persistConfig = {
   key: 'root',
