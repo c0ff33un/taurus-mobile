@@ -1,27 +1,25 @@
 import { createAppContainer } from 'react-navigation'
-import { createStackNavigator } from 'react-navigation-stack' 
+import { createStackNavigator } from 'react-navigation-stack'
 //import FeedScreen from '../screens/feed/FeedScreen'
-import Login from '../screens/login/LoginScreen'
-import SignUp from '../screens/sign_up/SignUpScreen'
-import ValidateEmailScreen from '../screens/sign_up/ValidateEmailScreen'
-import Game from '../screens/game/GameScreen'
+import Login from '../screens/Login'
+import SignUp from '../screens/SignUp'
+import ValidateEmail from '../screens/ValidateEmail'
 
 // you can also import from @react-navigation/native
 
 const AppNavigator = createStackNavigator(
   {
-    Game: { screen: Game, navigationOptions: { header: null }},
     Login: { screen: Login, navigationOptions: { header: null }},
     SignUp: { screen: SignUp, navigationOptions: { header: null }},
-    ValidateEmail: { screen: ValidateEmailScreen, navigationOptions: { header: null } }
+    ValidateEmail: { screen: ValidateEmail, navigationOptons: { header: null } },
   },
   {
-    initialRouteName: 'Login'
+    initialRouteName: 'Login',
   }
-);
+)
 
-const UnauthenticatedAppContainer = createAppContainer(AppNavigator);
+const UnauthenticatedAppContainer = createAppContainer(AppNavigator)
 
 // Now AppContainer is the main component for React to render
 
-export default UnauthenticatedAppContainer;
+export default UnauthenticatedAppContainer

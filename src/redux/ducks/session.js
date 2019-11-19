@@ -1,3 +1,8 @@
+import getEnvVars from 'taurusMobile/environment'
+import { persistReducer } from 'redux-persist'
+import { finishLoading } from './loading'
+import AsyncStorage from '@react-native-community/async-storage'
+
 const REQUEST_JWT = 'REQUEST_JWT'
 const RECEIVE_JWT = 'RECEIVE_JWT'
 const VALIDATE_EMAIL = 'VALIDATE_EMAIL'
@@ -61,7 +66,7 @@ export function guestLogin() {
   return (dispatch) => {
     dispatch(requestJWT())
     const { apiUrl } = getEnvVars
-    
+    console.log('here', apiUrl)
     const options = {
       method: "POST",
       headers: {
@@ -77,15 +82,19 @@ export function guestLogin() {
       .then(res => {
         console.log(res)
         if(!res.data){
-          msg = res.errors[0].message
+          const msg = res.errors[0].message
           dispatch(receiveJWTError(msg))
         } else {
-          jwt = res.data.guest.jwt
+          const jwt = res.data.guest.jwt
+          dispatch(finishLoading())
           dispatch(receiveJWT(jwt))
         }
         return res
       })
-      .catch(error => {throw new Error(error)})
+      .catch(error => {
+        dispatch(finishLoading())
+        throw new Error(error)
+      })
   }
 }
 
@@ -128,4 +137,11 @@ function session(
   }
 }
 
-export default session
+
+const persistConfig = {
+  key: 'session',
+  storage: AsyncStorage,
+  blacklist: ['isLoggingIn'],
+}
+
+export default persistReducer(persistConfig, session)

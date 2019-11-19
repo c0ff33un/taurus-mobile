@@ -1,13 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, Linking } from "react-native";
- import { Button } from "react-native-paper";
- import { guestLogin } from '@redux/ducks/session';
-// import { SocialIcon } from "react-native-elements";
+import { Button } from "react-native-paper";
+import  { startLoading } from '@redux/ducks/loading'
+import { guestLogin } from '@redux/ducks/session';
 import getEnvVars from "taurusMobile/environment";
-// import { Google, /*Facebook,*/ /*AuthSession*/ } from "expo";
-// import * as Facebook from 'expo-facebook'; 
 import { connect } from "react-redux";
-// import { loginWithJWT } from '@redux/actions';
 
 class SignUp extends Component {
   state = {
@@ -15,9 +12,9 @@ class SignUp extends Component {
   };
 
   handleGuest = () => {
-    console.log("Guest")
-    this.props.dispatch(guestLogin())
-    console.log(this.props.message)
+    const { dispatch }  = this.props
+    dispatch(startLoading())
+    dispatch(guestLogin())
   } 
 
   render() {
@@ -32,7 +29,13 @@ class SignUp extends Component {
         }}
       >
         <View style={{ flex: 1 }} />
-          <Button  onPress={this.handleGuest} mode="contained">Guest</Button>
+          <Button  
+            onPress={this.handleGuest} 
+            disabled={this.props.loading}
+            mode="contained"
+          >
+            Guest
+          </Button>
         <View style={{ flex: 1 }} />
       </View>
     );

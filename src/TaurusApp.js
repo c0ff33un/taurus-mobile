@@ -24,7 +24,9 @@ const styles = StyleSheet.create({
 
 class TaurusApp extends Component  {
   async componentDidMount() {
-    this.props.dispatch(checkPermission());
+    if (this.props.fmcToken === '') {
+      this.props.dispatch(checkPermission());
+    }
     this.createNotificationListeners(); //add this line
   }
 
@@ -121,7 +123,6 @@ class TaurusApp extends Component  {
     });
   }
   render() {
-    console.log("Appjs", this.props);
     const { authenticated } = this.props
     return (
        <View style={{ flex: 1 }}>
@@ -145,9 +146,9 @@ class TaurusApp extends Component  {
 
 const mapStateToProps = state => {
   const { jwt } = state.session
-  const { fcmToken, messages } = state
+  const { messages } = state
   const authenticated = jwt || false
-  return { authenticated }
+  return { authenticated, fcmToken: messages.fcmToken }
 
 };
 
