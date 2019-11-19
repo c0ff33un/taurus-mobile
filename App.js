@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Provider } from 'react-redux';
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+import { Provider } from 'react-redux'
+import { w3cwebsocket as W3CWebSocket } from 'websocket'
 import getEnvVars from './environment'
 import TaurusApp from './src/TaurusApp'
-import configureStore from "@redux/store";
-import AuthenticatedAppContainer from "./src/routing/AuthenticatedAppContainer"
+import configureStore from '@redux'
+import AuthenticatedAppContainer from '/src/routing/AuthenticatedAppContainer'
 
 const store = configureStore()
 

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react'
 import {
   StyleSheet,
   View,
@@ -6,10 +6,10 @@ import {
   KeyboardAvoidingView,
   Image,
   TouchableHighlight
-} from "react-native";
-import { TextInput, Button, Text } from "react-native-paper";
-import { DefaultTheme, Provider as PaperProvider } from "react-native-paper";
-import getEnvVars from "taurusMobile/environment";
+} from 'react-native'
+import { TextInput, Button, Text } from 'react-native-paper'
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper'
+import getEnvVars from 'taurusMobile/environment'
 
 const colorTextInput = "#FF6B35";
 

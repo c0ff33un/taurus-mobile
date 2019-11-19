@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from "react";
-import { StyleSheet, View, Alert, AsyncStorage } from "react-native";
-import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { connect } from "react-redux";
+import React, { Component, Fragment } from 'react'
+import { StyleSheet, View, Alert, AsyncStorage } from 'react-native'
+import { getStatusBarHeight } from 'react-native-status-bar-height'
+import { connect } from "react-redux"
 
-import AuthenticatedAppContainer from "./routing/AuthenticatedAppContainer";
-import UnauthenticatedAppContainer from "./routing/UnauthenticatedAppContainer";
+import AuthenticatedAppContainer from './routing/AuthenticatedAppContainer'
+import UnauthenticatedAppContainer from './routing/UnauthenticatedAppContainer'
 
 import firebase from 'react-native-firebase'
 

@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
-import { TextInput, Button, Text, DefaultTheme, DarkTheme} from "react-native-paper";
-import { connect } from "react-redux";
-import { login } from '@redux/actions';
-import Spinner from "react-native-loading-spinner-overlay";
+import React, { Component } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { TextInput, Button, Text, DefaultTheme, DarkTheme} from 'react-native-paper'
+import { connect } from 'react-redux'
+import { login } from '@redux/ducks/session'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const colorTextInput = "#FF6B35";
 

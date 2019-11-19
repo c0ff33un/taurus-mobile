@@ -1,20 +1,8 @@
-import {  
-  REQUEST_JWT,
-  RECEIVE_JWT,
-  RECEIVE_JWT_ERROR,
-  LOGOUT,
-  SET_FINISHED,
-} from './actionTypes'
-import getEnvVars from '../../environment'
-import { batch } from 'react-redux'
-
-/*
- * action creators
- */
-
-export function setFinished(filter) {
-  return { type: SET_FINISHED, payload: { filter }}
-}
+const REQUEST_JWT = 'REQUEST_JWT'
+const RECEIVE_JWT = 'RECEIVE_JWT'
+const VALIDATE_EMAIL = 'VALIDATE_EMAIL'
+const RECEIVE_JWT_ERROR = 'RECEIVE_JWT_ERROR'
+const LOGOUT = 'LOGOUT'
 
 function requestJWT() {
   return { type: REQUEST_JWT }
@@ -104,3 +92,40 @@ export function guestLogin() {
 export function logout() {
   return { type: LOGOUT }
 }
+
+function session(
+  state = {
+    jwt: null,
+    isLoggingIn: false,
+    needsValidation: false,
+    loginError: false,
+    message: ""
+  }, 
+  action
+) {
+  switch (action.type) {
+    case REQUEST_JWT:
+      return Object.assign({},
+        state,
+        { isLoggingIn: true })
+    case RECEIVE_JWT:
+      const { jwt } = action.payload
+      console.log(jwt)
+      return Object.assign({},
+        state,
+        {jwt, isLoggingIn: false})
+    case RECEIVE_JWT_ERROR: 
+      const { message } = action.payload
+      return { isLoggingIn: false, loginError: true, message }
+    case VALIDATE_EMAIL:
+      return Object.assign({}, 
+        state,
+        { needsValidation: true, isLoggingIn: false})
+    case LOGOUT:
+      return { jwt: null, isLoggingIn: false };
+    default:
+      return state;
+  }
+}
+
+export default session
