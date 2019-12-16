@@ -1,20 +1,36 @@
 import React, { Component } from 'react'
 import { Image, ScrollView, StyleSheet, View, Dimensions } from 'react-native'
-import { connect } from 'react-redux'
+import { connect, batch } from 'react-redux'
 
 import getEnvVars from 'taurusMobile/environment'
 
 import { logout } from '@redux/ducks/session'
-import { loadingActions } from '@redux/ducks/loading'
+import { startLoading, finishLoading, loadingActions } from '@redux/ducks/loading'
 import { wsConnect } from '@redux/ducks/websockets'
+import { invalidateGame } from '@redux/ducks/gameController'
+import { invalidateMessages } from '@redux/ducks/messageLog'
 
 import { Text, Button, TextInput, DefaultTheme } from 'react-native-paper'
 import { withNavigation } from 'react-navigation'
 
+
 class MenuScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { roomId: '' }
+    this.state = { 
+      roomId: "",
+      didBlurSubscription : this.props.navigation.addListener(
+        'willFocus',
+        payload => {
+          console.log(payload)
+          const { dispatch } = this.props
+          dispatch(wsMessage({ type: "leave" }))
+          dispatch(wsDisconnect())
+          dispatch(invalidateGame())
+          dispatch(invalidateMessages())
+        }
+      )
+    }
   }
 
   handleLogOut = () => {
@@ -63,7 +79,7 @@ class MenuScreen extends Component {
           this.setState({ room_id: res.data.room.id })
           console.log('params:', jwt, roomId)
           dispatch(wsConnect({ token: jwt, roomId }))
-          this.props.navigation.navigate({ routeName: 'Game' })
+          // this.props.navigation.navigate({ routeName: 'Game' })
         }
         return res
       })
@@ -72,15 +88,34 @@ class MenuScreen extends Component {
       })
   }
 
-  handleJoinRoom = () => {
+  joinRoom = () => {
     const { roomId } = this.state,
-      { jwt } = this.props
-    this.props.screenProps.connect(roomId, jwt)
-    this.props.navigation.navigate({ routeName: 'Game' })
+      { jwt, dispatch } = this.props
+
+    batch(() => {
+      dispatch(startLoading())
+      dispatch(invalidateGame())
+      dispatch(invalidateMessages())
+      dispatch(wsConnect({ token:jwt, roomId }))
+    }) 
+  }
+
+  componentDidMount = () =>{
+    if (this.props.connected){
+      this.props.navigation.navigate({ routeName: 'Game' })
+    }
+  }
+
+  componentDidUpdate = () =>{
+    if (this.props.connected){
+      this.props.navigation.navigate({ routeName: 'Game' })
+    }
   }
 
   render() {
-    const { loading } = this.props
+    const { loading, connected } = this.props
+
+    
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.text}>τrus</Text>
@@ -113,7 +148,7 @@ class MenuScreen extends Component {
             label="Room ID"
             style={styles.lobby}
             value={this.state.roomId}
-            onChangeText={room_id => this.setState({ roomId })}
+            onChangeText={(roomId) => this.setState({ roomId })}
             theme={{
               ...DefaultTheme,
               colors: {
@@ -131,7 +166,7 @@ class MenuScreen extends Component {
             mode="contained"
             dark={true}
             title="Join Room"
-            onPress={this.handleJoinRoom}
+            onPress={this.joinRoom}
             style={styles.joinButton}
             theme={{
               ...DefaultTheme,
@@ -189,7 +224,7 @@ class MenuScreen extends Component {
 }
 
 function mapStateToProps(state) {
-  return { loading: state.loading, jwt: state.session.jwt}
+  return { loading: state.loading, jwt: state.session.jwt, connected: state.websockets.connected}
 }
 
 const styles = StyleSheet.create({

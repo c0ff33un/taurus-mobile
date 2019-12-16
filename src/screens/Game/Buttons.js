@@ -44,68 +44,56 @@ class Buttons extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 0.5, width: 400 }}>
+      <View style={{ position:'absolute', top: Dimensions.get('screen').height*6/16,backgroundColor:'transparent'}}>
         {/* Up */}
         <View style={{ flex: 1, alignSelf: 'center' }}>
           <TouchableOpacity
             style={{
-              borderWidth: 1,
-              borderColor: 'rgba(0,0,0,0.2)',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 80,
-              height: 80,
-              backgroundColor: '#fff',
-              borderRadius: 50,
+              width: Dimensions.get('screen').width,
+              height: Dimensions.get('screen').height/5,
+              backgroundColor: 'rgba(0,172,159,0.05)',
+              borderColor: 'transparent',
               alignSelf: 'center',
             }}
             onPress={() => this.keyPressed('u')}
           >
-            <Text>Up</Text>
           </TouchableOpacity>
         </View>
         {/* Left Right */}
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View
             style={{
-              flex: 0.5,
-              alignSelf: 'flex-start',
-              marginLeft: Dimensions.get('window').width / 6,
+              flex: 1,
             }}
           >
             <TouchableOpacity
               style={{
-                borderWidth: 1,
-                borderColor: 'rgba(0,0,0,0.2)',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 80,
-                height: 80,
-                backgroundColor: '#fff',
-                borderRadius: 50,
-                alignSelf: 'auto',
+                width: Dimensions.get('screen').width/2,
+                height: Dimensions.get('screen').height/6,
+                backgroundColor: 'rgba(243,195,0,0.05)',
+                borderColor: 'transparent',
               }}
               onPress={() => this.keyPressed('l')}
             >
-              <Text>Left</Text>
             </TouchableOpacity>
           </View>
-          <View style={{ flex: 0.5, alignSelf: 'flex-start' }}>
+          <View style={{ flex: 1, alignSelf: 'flex-end' }}>
             <TouchableOpacity
               style={{
-                borderWidth: 1,
-                borderColor: 'rgba(0,0,0,0.2)',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 80,
-                height: 80,
-                backgroundColor: '#fff',
-                borderRadius: 50,
+                width: Dimensions.get('screen').width/2,
+                height: Dimensions.get('screen').height/6,
+                backgroundColor: 'rgba(223,0,36,0.05)',
+                borderColor: 'transparent',
                 alignSelf: 'auto',
               }}
               onPress={() => this.keyPressed('r')}
             >
-              <Text>Right</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -113,18 +101,15 @@ class Buttons extends React.Component {
         <View style={{ flex: 1, alignSelf: 'center' }}>
           <TouchableOpacity
             style={{
-              borderWidth: 1,
-              borderColor: 'rgba(0,0,0,0.2)',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 80,
-              height: 80,
-              backgroundColor: '#fff',
-              borderRadius: 50,
+              width: Dimensions.get('screen').width,
+              height: Dimensions.get('screen').height/5,
+              backgroundColor: 'rgba(46,109,180,0.05)',
+              borderColor: 'transparent',
             }}
             onPress={() => this.keyPressed('d')}
           >
-            <Text>Down</Text>
           </TouchableOpacity>
         </View>
       </View>

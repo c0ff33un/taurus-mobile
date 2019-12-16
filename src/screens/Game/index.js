@@ -33,14 +33,15 @@ class Game extends React.Component {
     if (grid !== null) {
       draw = true
       const drawGrid = [...grid]
+      let me_id = null
       for (var key in players) {
-        var x = players[key]['x']
-        var y = players[key]['y']
+        const { x, y } = players[key]
         console.log(players[key])
         console.log(x, y)
-        drawGrid[y * cols + x] = { occupied: true }
+        drawGrid[y * cols + x] = { occupied: true, /*"me" : key === true*/ }
       }
       gridItems = drawGrid.map((cell, index) => {
+        console.log(cell)
         const x = Math.floor(index / cols),
           y = index % cols
         const key = x.toString() + '-' + y.toString()
@@ -51,7 +52,9 @@ class Game extends React.Component {
           style = { ...styles.Cell }
         } else if (x == 0 || x == 24 || y == 0 || y == 24) {
           style = { ...styles.Win, ...styles.Cell }
-        } else {
+        } 
+        // else if( (cell.occupied && cell.me) || index == me_id ){} 
+        else {
           style = { ...styles.Occupied, ...styles.Cell }
         }
 
@@ -61,18 +64,17 @@ class Game extends React.Component {
     return (
       <View
         style={{
-          flex: 6,
+          flex: 1,
           flexDirection: "column",
-          justifyContent: "space-around",
+          justifyContent: "flex-end",
           backgroundColor: "transparent",
           alignItems: "center",
           justifyContent: "center"
         }}
       >
-        <GameController />
+        <GameController navigation={this.props.navigation}/>
         <Board gridItems={gridItems}/>
         <Buttons />
-
       </View>
     );
   }
@@ -92,14 +94,14 @@ const styles = StyleSheet.create({
   },
 
   Cell: {
-    width: 16,
-    height: 16,
+    width: Dimensions.get('screen').width/30,
+    height: Dimensions.get('screen').width/30,
     borderStyle: 'solid',
     borderWidth: 1,
   },
 
   Win: {
-    backgroundColor: '#32a852',
+    backgroundColor: 'black',
   },
 
   Wall: {
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   },
 
   Occupied: {
-    backgroundColor: 'red',
+    backgroundColor: `hsl(${Math.random()*360},50%,50%)`,
   },
 
   buttons: {
@@ -116,7 +118,8 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(state) {
-  const { gameController, websockets } = state
+  const { gameController, websockets, authentication } = state
+  console.log('\n\n\n',authentication)
   return { jwt: state.session.jwt, roomId: websockets.roomId, grid: gameController.grid, players: gameController.players}
 }
 

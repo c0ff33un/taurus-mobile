@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Dimensions } from 'react-native'
 
 class Board extends React.Component {
   render() {
@@ -7,9 +7,9 @@ class Board extends React.Component {
     return (
       <View
         style={{
-          marginTop: 100,
-          flex: 1,
-          width: 400,
+          marginTop: Dimensions.get('screen').height/6,
+          flex: 6,
+          width: Dimensions.get('screen').width-Dimensions.get('screen').width/6,
           backgroundColor: 'white',
           flexDirection: 'row',
           flexWrap: 'wrap',

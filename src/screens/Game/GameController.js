@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { startLoading, finishLoading } from '@redux/ducks/loading'
 import { invalidateGame } from '@redux/ducks/gameController'
 import { invalidateMessages } from '@redux/ducks/messageLog'
-import { wsDisconnect } from '@redux/ducks/websockets'
+import { wsMessage, wsDisconnect } from '@redux/ducks/websockets'
 import getEnvVars from 'taurusMobile/environment'
 
 const CELL_SIZE = 25
@@ -18,6 +18,17 @@ class GameController extends React.Component {
   constructor(props) {
     super(props)
     this.state = { rows: 25, cols: 25, numColumns: 25 }
+  }
+
+  goToMenu = () => {
+    const { dispatch, connected } = this.props
+    if(connected){
+      dispatch(wsMessage({ type: "leave" }))
+      dispatch(wsDisconnect())
+      dispatch(invalidateGame())
+      dispatch(invalidateMessages())
+    }
+    this.props.navigation.navigate('Menu')
   }
 
   setupGame = () => {
@@ -125,7 +136,7 @@ class GameController extends React.Component {
     return (
       <View
         style={{
-          flex: 0.2,
+          flex: 1,
           flexDirection: 'column',
           backgroundColor: 'white',
           alignItems: 'stretch',
@@ -134,29 +145,29 @@ class GameController extends React.Component {
       >
         <TextInput
           mode="outlined"
-          style={{ flex: 0.2, justifyContent: 'center' }}
-          value={this.props.roomId}
+          style={{ flex: 1.3, justifyContent: 'center', alignSelf:'center', fontSize: 21 }}
+          value={`RoomId: ${this.props.roomId}`}
           disabled={true}
           theme={{
             ...DefaultTheme,
             colors: {
               ...DefaultTheme.colors,
-              primary: '#13C4A3',
-              accent: '#272727',
-              background: '#FDFFFC',
+              primary: 'black',
+              accent: 'black',
+              background: 'transparent',
               text: '#272727',
               disabled: '#FDFFFC',
               placeholder: '#272727',
             },
           }}
         />
-        <View style={{ flex: 3, marginTop: 20, flexDirection: 'row' }}>
+        <View style={{ flex: 2, flexDirection: 'row' }}>
           <Button
             mode="outlined"
             disabled={loading}
             dark={true}
             onPress={this.setupGame}
-            style={{ flex: 1, height: 55, padding: 10, margin: 4 }}
+            style={{ flex: 1, margin: 4 }}
             theme={{
               ...DefaultTheme,
               colors: {
@@ -180,7 +191,7 @@ class GameController extends React.Component {
             dark={true}
             title="Join Room"
             onPress={this.startGame}
-            style={{ flex: 1, height: 55, padding: 10, margin: 4 }}
+            style={{ flex: 1, margin: 4 }}
             theme={{
               ...DefaultTheme,
               colors: {
@@ -196,6 +207,30 @@ class GameController extends React.Component {
             }}
           >
             Start Game
+          </Button>
+        </View>
+        <View style={{ flex: 2, flexDirection: 'row' }}>
+          <Button
+            mode="contained"
+            disabled={loading}
+            title="Return"
+            onPress={this.goToMenu}
+            style={{ flex: 1, margin: 4 }}
+            theme={{
+              ...DefaultTheme,
+              colors: {
+                primary: 'red',
+                accent: '#F6BD60',
+                background: '#FDFFFC',
+                surface: '#FDFFFC', 
+                text: '#FDFFFC',
+                disabled: '#FDFFFC',
+                placeholder: '#FDFFFC',
+                backdrop: '#FDFFFC',
+              },
+            }}
+          >
+            Return to Menu
           </Button>
         </View>
       </View>

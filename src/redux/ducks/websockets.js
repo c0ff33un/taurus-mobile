@@ -31,7 +31,7 @@ export function wsConnect(parameters) {
   const { token, roomId, url } = parameters
   if (url === undefined) {
     const { wsUrl } = getEnvVars
-    const calurl = `ws://${wsUrl}/ws/${roomId}?token=${token}`
+    const calurl = `${wsUrl}/ws/${roomId}?token=${token}`
     console.log('calurl', calurl)
     return { type: WS_CONNECT, payload: { url: calurl, roomId } }
   }

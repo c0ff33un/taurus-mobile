@@ -36,7 +36,7 @@ class Buttons extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 0.5, width: 400 }}>
+      <View style={{ flex: 1, width: 400, backgroundColor:'transparent' }}>
         {/* Up */}
         <View style={{ flex: 1, alignSelf: 'center' }}>
           <TouchableOpacity
@@ -60,6 +60,7 @@ class Buttons extends React.Component {
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View
             style={{
+              position: 'absolute',
               flex: 0.5,
               alignSelf: 'flex-start',
               marginLeft: Dimensions.get('window').width / 6,
@@ -71,7 +72,7 @@ class Buttons extends React.Component {
                 borderColor: 'rgba(0,0,0,0.2)',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 80,
+                width: -800,
                 height: 80,
                 backgroundColor: '#fff',
                 borderRadius: 50,
