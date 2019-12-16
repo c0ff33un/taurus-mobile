@@ -5,7 +5,9 @@ import { connect } from 'react-redux'
 import getEnvVars from 'taurusMobile/environment'
 
 import { logout } from '@redux/ducks/session'
-import { loadingActions } from '@redux/ducks/loading'
+import { startLoading } from '@redux/ducks/loading'
+import { invalidateGame } from '@redux/ducks/gameController'
+import { invalidateMessages } from '@redux/ducks/messageLog'
 import { wsConnect } from '@redux/ducks/websockets'
 
 import { Text, Button, TextInput, DefaultTheme } from 'react-native-paper'
@@ -38,7 +40,9 @@ class MenuScreen extends Component {
 
   handleCreateRoom = () => {
     const { dispatch, jwt } = this.props
-    dispatch(loadingActions.startLoading())
+    dispatch(startLoading())
+    dispatch(invalidateGame())
+    dispatch(invalidateMessages())
     const options = {
       method: 'POST',
       headers: {
@@ -58,6 +62,7 @@ class MenuScreen extends Component {
         console.log(res)
         if (!res.data) {
           console.log('No data')
+          return res
         } else {
           const roomId = res.data.room.id
           this.setState({ room_id: res.data.room.id })
