@@ -1,14 +1,15 @@
-import React from 'react'
-import { View } from 'react-native'
+import React, { Fragment, useEffect } from 'react'
+import { View, Text } from 'react-native'
 import { Button, TextInput, DefaultTheme } from 'react-native-paper'
 import { Dimensions } from 'react-native'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import { connect, useSelector, useDispatch, batch } from 'react-redux'
 import { startLoading, finishLoading } from '@redux/ducks/loading'
 import { invalidateGame } from '@redux/ducks/gameController'
 import { invalidateMessages } from '@redux/ducks/messageLog'
 import { wsMessage, wsDisconnect } from '@redux/ducks/websockets'
 import getEnvVars from 'taurusMobile/environment'
 
+import { NavigationActions, StackActions } from 'react-navigation'
 import { gql } from 'apollo-boost'
 import { useMutation } from '@apollo/react-hooks';
 
@@ -18,12 +19,16 @@ const HEIGHT = 625
 
 function SetupGame(props) {
   const { room, loading, gameRunning } = useSelector((state) => { 
-    return { room: state.websockets.roomId, loading: state.loading, gameRunning: state.gameController.gameRunning } 
+    return { 
+      room: state.websockets.roomId, 
+      loading: state.loading, 
+      gameRunning: state.gameController.gameRunning 
+    } 
   })
+
   const seed = Math.floor(Math.random() * Math.pow(10, 9)) 
   const rows = HEIGHT / CELL_SIZE
   const cols = WIDTH / CELL_SIZE
-  console.log(room, seed, rows, cols)
   const SETUP_GAME = gql`
     mutation {
       roomSetup(room: "${room}", seed: ${seed}, rows: ${rows}, cols: ${cols}) {
@@ -45,7 +50,7 @@ function SetupGame(props) {
         dispatch(startLoading())
         setupGame()
       }}
-      style={{ flex: 1, height: 55, padding: 10, margin: 4 }}
+      style={{ flex: 1, margin: 4,justifyContent:'center' }}
       theme={{
         ...DefaultTheme,
         colors: {
@@ -65,7 +70,6 @@ function SetupGame(props) {
   )
 }
 
-
 function StartGame(props) {
   const { room, loading, gameRunning } = useSelector((state) => { 
     return { room: state.websockets.roomId, loading: state.loading, gameRunning: state.gameController.gameRunning } 
@@ -83,6 +87,7 @@ function StartGame(props) {
   if (loading && data) {
     dispatch(finishLoading())
   }
+
   return (
     <Button
       mode="contained"
@@ -93,7 +98,7 @@ function StartGame(props) {
         dispatch(startLoading())
         startGame()
       }}
-      style={{ flex: 1, height: 55, padding: 10, margin: 4 }}
+      style={{ flex: 1, margin: 4, justifyContent:'center' }}
       theme={{
         ...DefaultTheme,
         colors: {
@@ -113,6 +118,19 @@ function StartGame(props) {
   )
 }
 
+function Redirect(props) {
+  const {connected,loading,navigation } = props
+
+  useEffect(() => {
+    navigation.dispatch(StackActions.reset({
+      index:0,
+      actions:[NavigationActions.navigate({ routeName: 'Game' })]
+    }))
+  })
+
+  return null
+}
+
 class GameController extends React.Component {
 
   constructor(props) {
@@ -120,72 +138,78 @@ class GameController extends React.Component {
     this.state = { rows: 25, cols: 25, numColumns: 25 }
   }
 
-  render() {
-    const { loading } = this.props
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: 'white',
-          alignItems: 'stretch',
-          width: Dimensions.get('window').width,
-        }}
-      >
-        <TextInput
-          mode="outlined"
-          style={{ flex: 1.3, justifyContent: 'center', alignSelf:'center', fontSize: 21 }}
-          value={`RoomId: ${this.props.roomId}`}
-          disabled={true}
-          theme={{
-            ...DefaultTheme,
-            colors: {
-              ...DefaultTheme.colors,
-              primary: 'black',
-              accent: 'black',
-              background: 'transparent',
-              text: '#272727',
-              disabled: '#FDFFFC',
-              placeholder: '#272727',
-            },
-          }}
-        />
-        <View style={{ flex: 3, marginTop: 20, flexDirection: 'row' }}>
-          <SetupGame />
-          <StartGame />
+  goToMenu = () => {
+    const { dispatch } = this.props
+    
+    batch(()=>{
+      dispatch(wsMessage({ type: "leave" }))
+      dispatch(wsDisconnect())
+      dispatch(invalidateGame())
+      dispatch(invalidateMessages())
+    })
+  }
 
+  render() {
+    const { loading, connected } = this.props
+    return (
+      <Fragment>
+        { !connected ? this.props.navigation.navigate('Menu') : 
+          <View
+          style={{
+            flex: 1.2,
+            flexDirection: 'column',
+            backgroundColor: 'white',
+            alignItems: 'stretch',
+            width: Dimensions.get('window').width,
+          }}
+        >
+          <Text
+            selectable={true}
+            style={{ flex: 0.6, justifyContent: 'center', alignSelf:'center', fontSize: Dimensions.get('screen').width/25 }}
+          >{`RoomId: ${this.props.roomId}`}</Text>
+          <View style={{ flex: 1, flexDirection: 'row' }}>
+            <SetupGame />
+            <StartGame />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Button
+              mode="contained"
+              disabled={loading}
+              title="Return"
+              onPress={this.goToMenu}
+              style={{ flex: 1, margin: 4, justifyContent:'center'}}
+              theme={{
+                ...DefaultTheme,
+                colors: {
+                  primary: 'red',
+                  accent: '#F6BD60',
+                  background: '#FDFFFC',
+                  surface: '#FDFFFC', 
+                  text: '#FDFFFC',
+                  disabled: '#FDFFFC',
+                  placeholder: '#FDFFFC',
+                  backdrop: '#FDFFFC',
+                },
+              }}
+            >
+              Return to Menu
+            </Button>
+          </View>
         </View>
-        <View style={{ flex: 2, flexDirection: 'row' }}>
-          <Button
-            mode="contained"
-            disabled={loading}
-            title="Return"
-            onPress={this.goToMenu}
-            style={{ flex: 1, margin: 4 }}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: 'red',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC', 
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              },
-            }}
-          >
-            Return to Menu
-          </Button>
-        </View>
-      </View>
+        }
+      </Fragment>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return { jwt: state.session.jwt, loading: state.loading, roomId: state.websockets.roomId }
+  const { loading, authentication, gameController, websockets } = state
+  return {
+    jwt: authentication.token,
+    loading,
+    ...gameController,
+    ...websockets,
+  }
 }
 
 export default connect(mapStateToProps)(GameController)

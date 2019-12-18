@@ -14,7 +14,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['loading', 'websockets', 'gameController', 'session'],
+  blacklist: ['loading', 'websockets', 'gameController', 'authentication'],
 }
 
 const loggerMiddleware = createLogger()

@@ -1,37 +1,23 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment, useEffect } from 'react'
 import { Image, ScrollView, StyleSheet, View, Dimensions } from 'react-native'
 import { connect, batch } from 'react-redux'
 
 import getEnvVars from 'taurusMobile/environment'
 
-import { logout } from '@redux/ducks/session'
+import { logout } from '@redux/ducks/authentication'
 import { startLoading } from '@redux/ducks/loading'
 import { invalidateGame } from '@redux/ducks/gameController'
 import { invalidateMessages } from '@redux/ducks/messageLog'
-import { wsConnect } from '@redux/ducks/websockets'
-import { invalidateGame } from '@redux/ducks/gameController'
-import { invalidateMessages } from '@redux/ducks/messageLog'
+import { wsConnect, wsMessage } from '@redux/ducks/websockets'
 
 import { Text, Button, TextInput, DefaultTheme } from 'react-native-paper'
-import { withNavigation } from 'react-navigation'
-
+import { withNavigation, NavigationActions, StackActions } from 'react-navigation'
 
 class MenuScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { 
       roomId: "",
-      didBlurSubscription : this.props.navigation.addListener(
-        'willFocus',
-        payload => {
-          console.log(payload)
-          const { dispatch } = this.props
-          dispatch(wsMessage({ type: "leave" }))
-          dispatch(wsDisconnect())
-          dispatch(invalidateGame())
-          dispatch(invalidateMessages())
-        }
-      )
     }
   }
 
@@ -81,10 +67,10 @@ class MenuScreen extends Component {
           return res
         } else {
           const roomId = res.data.room.id
-          this.setState({ room_id: res.data.room.id })
+          this.setState({ roomId })
           console.log('params:', jwt, roomId)
           dispatch(wsConnect({ token: jwt, roomId }))
-          // this.props.navigation.navigate({ routeName: 'Game' })
+          this.props.navigation.navigate('Game')
         }
         return res
       })
@@ -105,175 +91,187 @@ class MenuScreen extends Component {
     }) 
   }
 
-  componentDidMount = () =>{
-    if (this.props.connected){
-      this.props.navigation.navigate({ routeName: 'Game' })
-    }
-  }
-
-  componentDidUpdate = () =>{
-    if (this.props.connected){
-      this.props.navigation.navigate({ routeName: 'Game' })
-    }
-  }
-
   render() {
     const { loading, connected } = this.props
 
-    
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.text}>τrus</Text>
-        <Button
-          mode="contained"
-          dark={true}
-          title="Create Room"
-          disabled={loading}
-          onPress={this.handleCreateRoom}
-          style={styles.createButton}
-          theme={{
-            ...DefaultTheme,
-            colors: {
-              primary: '#6290C3',
-              accent: '#F6BD60',
-              background: '#FDFFFC',
-              surface: '#FDFFFC',
-              text: '#FDFFFC',
-              disabled: '#FDFFFC',
-              placeholder: '#FDFFFC',
-              backdrop: '#FDFFFC',
-            },
-          }}
-        >
-          Create Room
-        </Button>
-        <View style={styles.buttons}>
-          <TextInput
-            mode="outlined"
-            label="Room ID"
-            style={styles.lobby}
-            value={this.state.roomId}
-            onChangeText={(roomId) => this.setState({ roomId })}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                ...DefaultTheme.colors,
-                primary: '#6290C3',
-                accent: '#272727',
-                background: '#FDFFFC',
-                text: '#272727',
-                disabled: '#FDFFFC',
-                placeholder: '#272727',
-              },
-            }}
-          />
-          <Button
-            mode="contained"
-            dark={true}
-            title="Join Room"
-            onPress={this.joinRoom}
-            style={styles.joinButton}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#FE938C',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              },
-            }}
-          >
-            Join Room
-          </Button>
-        </View>
-        <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
-          <Button
-            mode="text"
-            style={styles.outButton}
-            dark={true}
-            disabled={loading}
-            onPress={this.handleLogOut}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#E84855',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              },
-            }}
-          >
-            <Text
-              style={{
-                color: 'red',
-                fontWeight: '900',
-                fontFamily: 'sans-serif-medium',
-                fontSize: 14,
+      <Fragment>
+        { connected ? this.props.navigation.replace('Game') :
+        
+          <ScrollView contentContainerStyle={styles.container}>
+          <Text style={styles.text}>τrus</Text>
+          <View style={styles.buttons}>
+            <View style={styles.createButtons}>
+              <Button
+                mode="contained"
+                dark={true}
+                title="Create Room"
+                disabled={loading}
+                onPress={this.handleCreateRoom}
+                style={styles.createButton}
+                theme={{
+                  ...DefaultTheme,
+                  colors: {
+                    primary: '#6290C3',
+                    accent: '#F6BD60',
+                    background: '#FDFFFC',
+                    surface: '#FDFFFC',
+                    text: '#FDFFFC',
+                    disabled: '#FDFFFC',
+                    placeholder: '#FDFFFC',
+                    backdrop: '#FDFFFC',
+                  },
+                }}
+              >
+                Create Room
+              </Button>
+            </View>
+            <View style={styles.joinButtons}>
+              <TextInput
+                mode="outlined"
+                label="Room ID"
+                disabled={loading}
+                style={styles.roomInput}
+                value={this.state.roomId}
+                onChangeText={(roomId) => this.setState({ roomId })}
+                theme={{
+                  ...DefaultTheme,
+                  colors: {
+                    ...DefaultTheme.colors,
+                    primary: '#6290C3',
+                    accent: '#272727',
+                    background: '#FDFFFC',
+                    text: '#272727',
+                    disabled: '#FDFFFC',
+                    placeholder: '#272727',
+                  },
+                }}
+              />
+              <Button
+                mode="contained"
+                dark={true}
+                title="Join Room"
+                disabled={loading}
+                onPress={this.joinRoom}
+                style={styles.joinButton}
+                theme={{
+                  ...DefaultTheme,
+                  colors: {
+                    primary: '#FE938C',
+                    accent: '#F6BD60',
+                    background: '#FDFFFC',
+                    surface: '#FDFFFC',
+                    text: '#FDFFFC',
+                    disabled: '#FDFFFC',
+                    placeholder: '#FDFFFC',
+                    backdrop: '#FDFFFC',
+                  },
+                }}
+              >
+                Join Room
+              </Button>
+            </View>
+          </View>
+          
+          <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
+            <Button
+              mode="text"
+              style={styles.outButton}
+              dark={true}
+              disabled={loading}
+              onPress={this.handleLogOut}
+              theme={{
+                ...DefaultTheme,
+                colors: {
+                  primary: '#E84855',
+                  accent: '#F6BD60',
+                  background: '#FDFFFC',
+                  surface: '#FDFFFC',
+                  text: '#FDFFFC',
+                  disabled: '#FDFFFC',
+                  placeholder: '#FDFFFC',
+                  backdrop: '#FDFFFC',
+                },
               }}
             >
-              LOG OUT
-            </Text>
-          </Button>
-        </View>
-      </ScrollView>
+              <Text
+                style={{
+                  color: 'red',
+                  fontWeight: '900',
+                  fontFamily: 'sans-serif-medium',
+                  fontSize: 14,
+                }}
+              >
+                LOG OUT
+              </Text>
+            </Button>
+          </View>
+        </ScrollView>
+        }
+      </Fragment>
     )
   }
 }
 
-function mapStateToProps(state) {
-  return { loading: state.loading, jwt: state.session.jwt, connected: state.websockets.connected}
-}
-
+const h = Dimensions.get('screen').scale*13
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    alignContent: 'flex-start',
+  },
+  buttons: {
+    flex: 10,
+    flexDirection: 'column',
+    alignSelf: 'center',
+  },
+  createButtons: {
+    margin: 7,
+    height: h
   },
   createButton: {
-    flex: 0.15,
-    margin: 7,
+    flex:1, 
+    minWidth: Dimensions.get('screen').width*97/100,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  joinButtons:{
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'center'
   },
   joinButton: {
     flex: 1,
     margin: 6,
-    height: 58,
     alignItems: 'center',
     justifyContent: 'center',
+    height: h
+  },
+  roomInput: {
+    flex: 1,
+    marginLeft: 8,
+    height: h
   },
   outButton: {
-    flex: 0.14,
+    flex: 1,
     margin: 7,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  lobby: {
-    flex: 1,
-    marginLeft: 8,
-    width: Dimensions.get('window').width / 3,
-  },
-  buttons: {
-    flex: 1,
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
   text: {
-    flex: 0.3,
+    flex: 2,
     alignSelf: 'center',
-    fontSize: 90,
+    fontSize: Dimensions.get('screen').height/9,
     fontFamily: 'sans-serif-light',
-    fontWeight: '100',
   },
 })
+
+function mapStateToProps(state) {
+  const { loading, authentication, websockets } = state
+
+  return { 
+    loading, 
+    jwt: authentication.jwt, 
+    connected: websockets.connected
+  }
+}
 
 export default withNavigation(connect(mapStateToProps)(MenuScreen))

@@ -12,8 +12,7 @@ class LoginScreen extends Component {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <Header />
-        <UserInput navigation={this.props.navigation} />
-        <SignUp navigation={this.props.navigation} />
+        <UserInput />
       </ScrollView>
     );
   }
@@ -21,10 +20,7 @@ class LoginScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: "white",
-    padding: 0,
+    flex: 1
   }
 });
 

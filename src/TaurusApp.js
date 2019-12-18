@@ -145,7 +145,7 @@ class TaurusApp extends Component  {
 }
 
 const mapStateToProps = state => {
-  const { jwt } = state.session
+  const { jwt } = state.authentication
   const { messages } = state
   const authenticated = jwt || false
   return { authenticated, fcmToken: messages.fcmToken }

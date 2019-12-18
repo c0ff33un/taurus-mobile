@@ -97,15 +97,15 @@ const styles = StyleSheet.create({
     width: Dimensions.get('screen').width/30,
     height: Dimensions.get('screen').width/30,
     borderStyle: 'solid',
-    borderWidth: 1,
+    borderWidth: 0.1,
   },
 
   Win: {
-    backgroundColor: 'black',
+    backgroundColor: 'gold',
   },
 
   Wall: {
-    backgroundColor: 'black',
+    backgroundColor: `hsl(${Math.random()*360}, 50%, 50%)`,
   },
 
   Occupied: {
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   const { gameController, websockets, authentication } = state
-  console.log('\n\n\n',authentication)
-  return { jwt: state.session.jwt, roomId: websockets.roomId, grid: gameController.grid, players: gameController.players}
+  // console.log('\n\n\n',authentication)
+  return { jwt: authentication.token, roomId: websockets.roomId, grid: gameController.grid, players: gameController.players}
 }
 
 export default connect(mapStateToProps)(Game)

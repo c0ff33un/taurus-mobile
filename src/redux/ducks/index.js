@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import session from './session';
+import authentication from './authentication';
 import messages from './messages';
 import messageLog from './messageLog';
 import websockets from './websockets';
@@ -8,7 +8,7 @@ import gameController from './gameController';
 
 
 export default combineReducers({
-  session,
+  authentication,
   messages,
   gameController,
   loading,

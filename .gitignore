@@ -92,3 +92,4 @@ RNTester/Pods/*
 
 environment.js
 .vscode/
+src/searchfiles.sh

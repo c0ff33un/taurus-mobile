@@ -18,9 +18,9 @@ class Buttons extends React.Component {
   keyPressed = (key) => {
     const { lastPressed } = this.state
     const now = new Date().getTime()
-    console.log(lastPressed, '@@@@@', now)
-    console.log(key)
-    if ((now - lastPressed) < 50) {
+    // console.log(lastPressed, '@@@@@', now)
+    // console.log(key)
+    if ((now - lastPressed) < 10) {
       return
     }
     this.setState({ lastPressed: new Date().getTime() })

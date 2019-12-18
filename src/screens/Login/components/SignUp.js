@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, Linking } from "react-native";
 import { Button } from "react-native-paper";
 import  { startLoading } from '@redux/ducks/loading'
-import { guestLogin } from '@redux/ducks/session';
+import { guestLogin } from '@redux/ducks/authentication';
 import getEnvVars from "taurusMobile/environment";
 import { connect } from "react-redux";
 
@@ -43,8 +43,8 @@ class SignUp extends Component {
 }
 
 const mapStateToProps = state => {
-  const { isLoggingIn } = state.session;
-  return { isLoggingIn };
+  const { loading } = state;
+  return { isLoggingIn: loading };
 };
 
 export default connect(mapStateToProps)(SignUp);

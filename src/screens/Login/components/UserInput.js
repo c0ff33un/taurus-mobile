@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { TextInput, Button, Text, DefaultTheme, DarkTheme} from 'react-native-paper'
 import { connect } from 'react-redux'
-import { login } from '@redux/ducks/session'
+import { startLoading } from '@redux/ducks/loading'
+import { login, guestLogin } from '@redux/ducks/authentication'
 import Spinner from 'react-native-loading-spinner-overlay'
+import { withNavigation } from 'react-navigation'
 
 const colorTextInput = "#FF6B35";
 
@@ -35,6 +37,30 @@ const validation = state => {
   typeof state.email == String && state.email.indexOf;
 };
 
+function CustomButton(props){
+
+  return (
+    <Button
+    mode="contained"
+    dark={true}
+    title="Login"
+    style={{
+      flex:1,
+      margin: 6,
+      maxHeight: 40,
+    }}
+    onPress={props.onPress}
+    theme={{
+        colors: {
+          primary: props.color,
+        }
+      }}
+  >
+    {props.text}
+  </Button>
+  )
+}
+
 class UserInput extends Component {
   state = {
     email: "",
@@ -52,12 +78,18 @@ class UserInput extends Component {
     console.log(this.props.message)
   }
 
+  handleGuest = () => {
+    const { dispatch }  = this.props
+    dispatch(startLoading())
+    dispatch(guestLogin())
+  } 
+
   render() {
 
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
         <Spinner
-          visible={this.props.isLoggingIn}
+          visible={this.props.loggingIn}
           textContent={"Loading"}
           textStyle={styles.spinnerTextStyle}
           color={"#F6BD60"}
@@ -68,7 +100,7 @@ class UserInput extends Component {
           animation={"fade"}
           size={"large"}
         />
-        {this.props.loginError && this.state.firstError ? (
+        {this.props.error && this.state.firstError ? (
           <View style={styles.errorDiv}>
             <Text style={styles.error}>
               {" "}
@@ -120,57 +152,26 @@ class UserInput extends Component {
         <View
           style={{ alignSelf: "flex-end", marginBottom: 20, marginRight: 9 }}
         >
-          <Text style={{ fontSize: 14, }} onPress={(e)=>{e.preventDefault(); this.props.navigation.navigate('SignUp')}}>¿Olvidaste tu contraseña?</Text>
+          <Text style={{ fontSize: 14, }} onPress={(e)=>{e.preventDefault(); this.props.navigation.navigate('SignUp')}}>Don't have an account? Sign Up</Text>
         </View>
-        <Button
-          mode="contained"
-          dark={true}
-          title="Iniciar Sesión"
-          onPress={this.handleLogin}
-          theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#13C4A3',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              }
-            }}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+          }}
         >
-          LOG IN
-        </Button>
-        <Button
-            title="Sign Up"
-            onPress={() => this.props.navigation.navigate('SignUp')}
-            dark={true}
-            theme={{
-              ...DefaultTheme,
-              colors: {
-                primary: '#32322C',
-                accent: '#F6BD60',
-                background: '#FDFFFC',
-                surface: '#FDFFFC',
-                text: '#FDFFFC',
-                disabled: '#FDFFFC',
-                placeholder: '#FDFFFC',
-                backdrop: '#FDFFFC',
-              }
-            }}
-          >
-          SIGN UP
-          </Button>
+          <CustomButton text={"Login"} onPress={this.handleLogin} color={"#3f51b5"} />
+          <CustomButton text={"Guest"} onPress={this.handleGuest} color={"#f50057"} />
+        </View>
       </View>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  const { isLoggingIn, jwt, loginError, message } = state.session
-  return { isLoggingIn, jwt, loginError, message, }
+  const { loading, authentication } = state
+  const { jwt, error, message } = authentication
+  return { loggingIn:loading, jwt, error, message, }
 }
 
-export default connect(mapStateToProps)(UserInput)
+export default withNavigation(connect(mapStateToProps)(UserInput))
